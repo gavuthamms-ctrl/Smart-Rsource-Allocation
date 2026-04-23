@@ -83,7 +83,7 @@ function loadHeroSection() {
 
 async function loadVolunteerStats() {
     try {
-        const res = await fetch('http://localhost:5000/api/volunteers/me/stats', { headers: getAuthHeaders() });
+        const res = await fetch('/api/volunteers/me/stats', { headers: getAuthHeaders() });
         const data = await res.json();
         
         if (data.success) {
@@ -121,7 +121,7 @@ async function toggleAvailability() {
     updateAvailabilityUI(newStatus);
     
     try {
-        const res = await fetch('http://localhost:5000/api/volunteers/availability', {
+        const res = await fetch('/api/volunteers/availability', {
             method: 'PUT',
             headers: getAuthHeaders(),
             body: JSON.stringify({ availability: newStatus })
@@ -152,7 +152,7 @@ async function loadRecommendations() {
     const grid = document.getElementById('recommendationsGrid');
     
     try {
-        const url = `http://localhost:5000/api/tasks/recommended?skills=${encodeURIComponent(skills)}&location=${encodeURIComponent(location)}`;
+        const url = `/api/tasks/recommended?skills=${encodeURIComponent(skills)}&location=${encodeURIComponent(location)}`;
         const res = await fetch(url, { headers: getAuthHeaders() });
         const data = await res.json();
         
@@ -269,7 +269,7 @@ async function acceptTask(taskId) {
     if (!confirm('Are you sure you want to accept this task?')) return;
     
     try {
-        const res = await fetch('http://localhost:5000/api/tasks/accept', {
+        const res = await fetch('/api/tasks/accept', {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify({ task_id: taskId, volunteer_id: getVolunteer().id })
@@ -320,7 +320,7 @@ function viewTaskDetails(taskId) {
  */
 async function loadMyTasks() {
     try {
-        const res = await fetch('http://localhost:5000/api/volunteers/me/tasks', { headers: getAuthHeaders() });
+        const res = await fetch('/api/volunteers/me/tasks', { headers: getAuthHeaders() });
         const data = await res.json();
         activeTasks = (data.success && data.data.tasks.length > 0) ? data.data.tasks : getMockMyTasks();
     } catch (e) {
@@ -515,7 +515,7 @@ async function submitFieldReport() {
     if (photo) formData.append('photo', photo);
 
     try {
-        const res = await fetch('http://localhost:5000/api/tasks/report', {
+        const res = await fetch('/api/tasks/report', {
             method: 'POST',
             headers: { 'Authorization': 'Bearer ' + getToken() },
             body: formData

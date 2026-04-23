@@ -156,7 +156,7 @@ async function handleLogin(event) {
     btnText.textContent = 'Logging in...';
 
     try {
-        const response = await fetch('http://localhost:5000/api/auth/login', {
+        const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -181,7 +181,7 @@ async function handleLogin(event) {
 
             if (selectedRole === 'community') {
                 try {
-                    const profileResponse = await fetch('http://localhost:5000/api/community/profile', {
+                    const profileResponse = await fetch('/api/community/profile', {
                         headers: {
                             'Authorization': `Bearer ${data.data.token}`
                         }
@@ -197,7 +197,7 @@ async function handleLogin(event) {
 
             if (selectedRole === 'ngo' || selectedRole === 'ngo_admin') {
                 try {
-                    const profileResponse = await fetch('http://localhost:5000/api/ngo/profile', {
+                    const profileResponse = await fetch('/api/ngo/profile', {
                         headers: {
                             'Authorization': `Bearer ${data.data.token}`
                         }

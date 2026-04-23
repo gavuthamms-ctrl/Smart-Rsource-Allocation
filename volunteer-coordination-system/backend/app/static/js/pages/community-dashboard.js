@@ -101,7 +101,7 @@ function updateStatusBadge() {
 
 async function loadDashboardStats() {
     try {
-        const response = await fetch('http://localhost:5000/api/community/dashboard-stats', {
+        const response = await fetch('/api/community/dashboard-stats', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         const data = await response.json();
@@ -123,7 +123,7 @@ async function loadNearbyVolunteers() {
     grid.innerHTML = '<p>Loading volunteers...</p>';
 
     try {
-        const response = await fetch(`http://localhost:5000/api/community/nearby-volunteers?city=${currentCommunity.city}`, {
+        const response = await fetch(`/api/community/nearby-volunteers?city=${currentCommunity.city}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         const data = await response.json();
@@ -173,7 +173,7 @@ async function loadAreaTasks() {
     grid.innerHTML = '<p>Loading tasks...</p>';
 
     try {
-        const response = await fetch(`http://localhost:5000/api/community/area-tasks?city=${currentCommunity.city}`, {
+        const response = await fetch(`/api/community/area-tasks?city=${currentCommunity.city}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         const data = await response.json();
@@ -226,7 +226,7 @@ function renderTasks(tasks) {
 async function loadAnnouncements() {
     const list = document.getElementById('announcementList');
     try {
-        const response = await fetch('http://localhost:5000/api/community/announcements', {
+        const response = await fetch('/api/community/announcements', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         const data = await response.json();
@@ -356,7 +356,7 @@ async function submitUrgentNeed() {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/community/update-need', {
+        const response = await fetch('/api/community/update-need', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -402,7 +402,7 @@ async function submitNeed() {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/community/update-need', {
+        const response = await fetch('/api/community/update-need', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -464,7 +464,7 @@ async function submitVolunteerRequest(event) {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/community/request-volunteer', {
+        const response = await fetch('/api/community/request-volunteer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('uploadForm').addEventListener('submit', handleUpload);
 });
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 const token = localStorage.getItem('token');
 
 function checkAuth() {

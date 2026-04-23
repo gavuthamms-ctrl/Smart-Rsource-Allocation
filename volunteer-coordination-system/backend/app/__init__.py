@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
@@ -11,7 +11,10 @@ jwt     = JWTManager()
 bcrypt  = Bcrypt()
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, 
+                static_folder='static',
+                static_url_path='/',
+                template_folder='templates')
     app.config.from_object('app.config.Config')
 
     # Initialize extensions
@@ -57,6 +60,16 @@ def create_app():
     with app.app_context():
         db.create_all()
         print("Database connected. Tables verified.")
+
+    # Frontend routes
+    @app.route('/')
+    def index():
+        from flask import redirect
+        return redirect('/pages/login.html')
+
+    @app.route('/pages/<path:path>')
+    def serve_pages(path):
+        return render_template(f'pages/{path}')
 
     # Global error handlers
     @app.errorhandler(404)

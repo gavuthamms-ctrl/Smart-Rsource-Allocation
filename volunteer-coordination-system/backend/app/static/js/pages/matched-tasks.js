@@ -132,7 +132,7 @@ async function loadMatchedTasks() {
         })
 
         const res = await fetch(
-            `http://localhost:5000/api/volunteers/tasks/recommended?${params.toString()}`,
+            `/api/volunteers/tasks/recommended?${params.toString()}`,
             {
                 headers: getAuthHeaders()
             }
@@ -979,7 +979,7 @@ async function confirmAcceptTask() {
     btn.disabled = true;
 
     try {
-        const res = await fetch('http://localhost:5000/api/volunteers/tasks/accept', {
+        const res = await fetch('/api/volunteers/tasks/accept', {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify({ task_id: currentTaskId, volunteer_id: volunteer.id })
@@ -1038,7 +1038,7 @@ async function submitReport() {
     }
 
     try {
-        const res = await fetch('http://localhost:5000/api/volunteers/tasks/report-issue', {
+        const res = await fetch('/api/volunteers/tasks/report-issue', {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify({

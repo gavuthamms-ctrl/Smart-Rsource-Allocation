@@ -24,7 +24,7 @@ let quizTimer = null;
 let quizSecondsLeft = 0;
 
 // API Config
-const API_BASE_URL = 'http://localhost:5000/api'; // Adjust to your Flask URL
+const API_BASE_URL = '/api'; // Adjust to your Flask URL
 
 // --- INITIALIZATION ---
 window.onload = async function() {
@@ -569,7 +569,7 @@ async function downloadResource(resourceId, fileUrl) {
     }
 
     // Trigger actual file download
-    const baseUrl = 'http://localhost:5000';
+    const baseUrl = '';
     window.open(baseUrl + fileUrl, '_blank');
 }
 

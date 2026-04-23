@@ -102,7 +102,7 @@ async function resolveStep() {
     if (!confirm("Are you sure this need is resolved?")) return;
     
     try {
-        const response = await fetch('http://localhost:5000/api/community/resolve-need', {
+        const response = await fetch('/api/community/resolve-need', {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });

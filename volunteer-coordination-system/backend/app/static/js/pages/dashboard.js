@@ -129,7 +129,7 @@ async function loadDashboardData() {
  */
 async function fetchPersonalStats() {
     try {
-        const response = await fetch('http://localhost:5000/api/volunteers/me/stats', {
+        const response = await fetch('/api/volunteers/me/stats', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         if (response.ok) {
@@ -187,7 +187,7 @@ async function fetchMatchedTasks() {
     try {
         const skills = encodeURIComponent(currentVolunteer.skills);
         const loc = encodeURIComponent(currentVolunteer.location);
-        const response = await fetch(`http://localhost:5000/api/volunteers/tasks/recommended?skills=${skills}&location=${loc}`);
+        const response = await fetch(`/api/volunteers/tasks/recommended?skills=${skills}&location=${loc}`);
         if (response.ok) {
             const data = await response.json();
             allMatchedTasks = data.data.tasks;
@@ -269,7 +269,7 @@ function getPersonalizedTaskMocks() {
 async function fetchActiveTasks() {
     const container = document.getElementById('activeTasksList');
     try {
-        const response = await fetch('http://localhost:5000/api/volunteers/me/tasks', {
+        const response = await fetch('/api/volunteers/me/tasks', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         if (response.ok) {
@@ -318,7 +318,7 @@ function renderActiveTasks(tasks) {
  */
 async function fetchRecentActivity() {
     try {
-        const response = await fetch('http://localhost:5000/api/volunteers/me/activity', {
+        const response = await fetch('/api/volunteers/me/activity', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         if (response.ok) {
@@ -421,7 +421,7 @@ async function handleStatusToggle() {
     if (newStatus === current) return; // Static for On Leave
 
     try {
-        const response = await fetch('http://localhost:5000/api/volunteers/availability', {
+        const response = await fetch('/api/volunteers/availability', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -561,7 +561,7 @@ async function sendMessage() {
 
     try {
         // 2. API Request
-        const response = await fetch('http://localhost:5000/api/chat/send', {
+        const response = await fetch('/api/chat/send', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -665,7 +665,7 @@ function initNotifications() {
 
 async function fetchNotifications(badgeOnly = false) {
     try {
-        const response = await fetch('http://localhost:5000/api/volunteers/me/notifications', {
+        const response = await fetch('/api/volunteers/me/notifications', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         
@@ -737,7 +737,7 @@ function getNotifIconInfo(type) {
 
 async function markNotificationsAsRead() {
     try {
-        const response = await fetch('http://localhost:5000/api/volunteers/me/notifications/read', {
+        const response = await fetch('/api/volunteers/me/notifications/read', {
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
@@ -912,7 +912,7 @@ async function submitReport() {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/volunteers/tasks/report', {
+        const response = await fetch('/api/volunteers/tasks/report', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

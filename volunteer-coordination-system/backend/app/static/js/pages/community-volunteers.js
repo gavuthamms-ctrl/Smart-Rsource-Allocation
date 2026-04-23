@@ -30,7 +30,7 @@ async function loadVolunteers() {
     grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Loading volunteers...</p>';
     
     try {
-        const response = await fetch(`http://localhost:5000/api/community/volunteers?city=${currentCommunity.city}`, {
+        const response = await fetch(`/api/community/volunteers?city=${currentCommunity.city}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         const data = await response.json();

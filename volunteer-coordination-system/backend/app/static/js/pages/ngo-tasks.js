@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('taskForm').addEventListener('submit', handleCreateTask);
 });
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 const token = localStorage.getItem('token');
 
 function checkAuth() {

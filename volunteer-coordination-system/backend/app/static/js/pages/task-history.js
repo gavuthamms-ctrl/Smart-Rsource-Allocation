@@ -80,7 +80,7 @@ async function loadTaskHistory() {
     
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/volunteers/me/task-history', {
+        const response = await fetch('/api/volunteers/me/task-history', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -402,7 +402,7 @@ function updateImpactCards() {
 async function updateTaskStatus(assignmentId, newStatus) {
     try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/tasks/assignments/status', {
+        const res = await fetch('/api/tasks/assignments/status', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -554,7 +554,7 @@ async function submitFieldReport() {
     
     try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/tasks/report', {
+        const res = await fetch('/api/tasks/report', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
