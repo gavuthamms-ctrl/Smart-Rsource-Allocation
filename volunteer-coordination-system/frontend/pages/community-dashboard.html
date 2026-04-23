@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Dashboard | Smart Resource Allocation</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet Map JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/pages/community-dashboard.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <span style="font-size: 24px;">🤝</span>
+                    <span class="logo-text">SmartResource</span>
+                </div>
+                <div class="comm-badge">🌍 Community Member</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="community-dashboard.html" class="nav-link active">
+                    <i>🏠</i> My Dashboard
+                </a>
+                <a href="community-needs.html" class="nav-link">
+                    <i>🆘</i> My Needs
+                </a>
+                <a href="community-volunteers.html" class="nav-link">
+                    <i>🙋</i> Find Volunteers
+                </a>
+                <a href="chatbox.html" class="nav-link">
+                    <i>💬</i> Community Chatbox
+                </a>
+                <a href="community-profile.html" class="nav-link">
+                    <i>⚙️</i> My Profile
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">P</div>
+                    <div class="user-details">
+                        <span class="name user-name">Loading...</span>
+                        <span class="role">Community Member</span>
+                    </div>
+                </div>
+                <div id="sidebarStatusBadge" class="status-badge">Loading Status...</div>
+                <button class="logout-btn" style="margin-top: 16px;" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Navbar -->
+            <header class="navbar">
+                <div class="page-title">My Community Dashboard</div>
+                <div class="navbar-right">
+                    <div class="nav-icon">
+                        🔔<span class="badge-dot"></span>
+                    </div>
+                    <button class="report-btn-nav" onclick="openModal('urgentNeedModal')">🆘 Report Urgent Need</button>
+                    <div class="user-info" style="margin-bottom: 0;">
+                        <div class="avatar" style="width: 32px; height: 32px; font-size: 14px;">P</div>
+                        <div class="user-details">
+                            <span class="name user-name" style="font-size: 12px;">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Hero Banner -->
+                <section class="hero-banner">
+                    <div class="hero-left">
+                        <h1 id="greeting">Welcome, User! 🌍</h1>
+                        <div class="hero-location">
+                            <span>📍 <span id="currentCity">Loading...</span></span>
+                            <span>•</span>
+                            <span>Need Status: Active</span>
+                        </div>
+                        <div class="need-preview-box">
+                            <h3>Your Current Need:</h3>
+                            <p id="needPreview" class="need-text">Loading your reported need...</p>
+                            <div class="need-footer">
+                                <a href="community-needs.html" class="view-more-link">View Full Details →</a>
+                            </div>
+                        </div>
+                        <p id="currentDate" style="font-size: 12px; margin-top: 15px; opacity: 0.7;"></p>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-box">
+                            <span class="icon">🙋</span>
+                            <span id="statNearbyVolunteers" class="number">0</span>
+                            <span class="label">Volunteers Near You</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="icon">✅</span>
+                            <span id="statActiveTasks" class="number">0</span>
+                            <span class="label">Active Tasks in Area</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="icon">🏢</span>
+                            <span id="statNGOs" class="number">1</span>
+                            <span class="label">Supporting NGO</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="dashboard-grid">
+                    <!-- Left Column -->
+                    <div class="col-left">
+                        <!-- Nearby Volunteers -->
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>🙋 Volunteers Available Near You</h2>
+                                <p>These volunteers can help with your needs</p>
+                            </div>
+                            <div id="nearbyVolunteersGrid" class="volunteer-grid">
+                                <!-- Dynamic Content -->
+                            </div>
+                            <a href="community-volunteers.html" style="display: block; margin-top: 15px; font-size: 13px; color: var(--community-primary); font-weight: 600; text-decoration: none;">View All Volunteers →</a>
+                        </section>
+
+                        <!-- Area Tasks -->
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>📋 Tasks Being Done for My Area</h2>
+                                <p>Work being done by volunteers in your area</p>
+                            </div>
+                            <div id="areaTasksGrid" class="task-grid">
+                                <!-- Dynamic Content -->
+                            </div>
+                            <a href="#" style="display: block; margin-top: 15px; font-size: 13px; color: var(--community-primary); font-weight: 600; text-decoration: none;">View All Area Tasks →</a>
+                        </section>
+
+                        <!-- NGO Announcements -->
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>📢 Recent Announcements from NGO</h2>
+                            </div>
+                            <div id="announcementList">
+                                <!-- Dynamic Content -->
+                            </div>
+                        </section>
+
+                        <!-- Area Map -->
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>🗺️ Area Map — Help Nearby</h2>
+                            </div>
+                            <div id="areaMap"></div>
+                        </section>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-right">
+                        <!-- Quick Actions -->
+                        <section class="dashboard-section">
+                            <div class="section-header">
+                                <h2>⚡ Quick Actions</h2>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="action-btn btn-urgent" onclick="openModal('urgentNeedModal')">
+                                    <span>🆘</span> Report Urgent Need
+                                </button>
+                                <button class="action-btn btn-submit" onclick="openModal('submitNeedModal')">
+                                    <span>📋</span> Submit Community Need
+                                </button>
+                                <button class="action-btn btn-request" onclick="openVolunteerRequestModal()">
+                                    <span>🙋</span> Request a Volunteer
+                                </button>
+                                <button class="action-btn btn-chat" onclick="window.location.href='chatbox.html'">
+                                    <span>💬</span> Open Community Chat
+                                </button>
+                                <button class="action-btn btn-ngo" onclick="openModal('contactNGOModal')">
+                                    <span>📞</span> Contact NGO
+                                </button>
+                            </div>
+                        </section>
+
+                        <!-- My Need Status -->
+                        <section class="dashboard-section">
+                            <div class="my-need-card">
+                                <div class="section-header">
+                                    <h2>🆘 My Current Need Status</h2>
+                                </div>
+                                <div id="activityFeed" class="timeline">
+                                    <!-- Dynamic Content -->
+                                </div>
+                                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                    <button class="chat-btn-outline" style="flex: 1;" onclick="openModal('submitNeedModal')">✏️ Update Need</button>
+                                    <button class="chat-btn-outline" style="flex: 1;" onclick="showToast('Thank you! Marking as resolved...', 'success')">✅ Resolve</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Recent Activity -->
+                        <section class="dashboard-section">
+                            <div class="section-header" style="margin-bottom: 12px;">
+                                <h2>🔔 Recent Activity</h2>
+                            </div>
+                            <div style="background: white; padding: 20px; border-radius: 14px; box-shadow: var(--shadow-sm);">
+                                <div style="font-size: 13px; color: var(--text-gray); text-align: center; padding: 20px;">
+                                    No recent activity for this week.
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Urgent Need Modal -->
+    <div id="urgentNeedModal" class="modal-overlay" onclick="if(event.target == this) closeModal('urgentNeedModal')">
+        <div class="modal-content">
+            <div class="modal-header red">
+                <h2 style="margin-bottom: 4px;">🚨 Report Urgent Need</h2>
+                <p style="font-size: 12px; opacity: 0.9;">We will notify nearby volunteers immediately</p>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>How urgent is this?</label>
+                    <div id="urgencySelector" class="pill-selector">
+                        <div class="pill-option active" style="border-color: #c62828; color: #c62828" onclick="selectUrgency('Critical', this)">🔴 CRITICAL</div>
+                        <div class="pill-option" style="border-color: #ef6c00; color: #ef6c00" onclick="selectUrgency('High', this)">🟠 HIGH</div>
+                        <div class="pill-option" style="border-color: #1976d2; color: #1976d2" onclick="selectUrgency('Medium', this)">🔵 MEDIUM</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Describe your emergency *</label>
+                    <textarea id="urgentDesc" class="form-control" rows="4" placeholder="What kind of help do you need?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Your exact location</label>
+                    <input type="text" id="urgentAddress" class="form-control" placeholder="Street address or landmark">
+                </div>
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="tel" id="urgentPhone" class="form-control" placeholder="Phone number">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('urgentNeedModal')">Cancel</button>
+                <button class="btn-submit-modal" style="background: var(--urgent-red);" onclick="submitUrgentNeed()">🚨 Send Urgent Alert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Need Modal -->
+    <div id="submitNeedModal" class="modal-overlay" onclick="if(event.target == this) closeModal('submitNeedModal')">
+        <div class="modal-content">
+            <div class="modal-header green">
+                <h2 style="margin-bottom: 4px;">📋 Submit Community Need</h2>
+                <p style="font-size: 12px; opacity: 0.9;">Tell us how volunteers can help you</p>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Need Title *</label>
+                    <input type="text" id="needTitle" class="form-control" placeholder="e.g. Need help with water supply">
+                </div>
+                <div class="form-group">
+                    <label>Detailed Description *</label>
+                    <textarea id="needDesc" class="form-control" rows="5" placeholder="Describe your need in detail..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Priority Level</label>
+                    <select id="needPriority" class="form-control">
+                        <option value="Low">Low - Flexible timing</option>
+                        <option value="Medium">Medium - Within a week</option>
+                        <option value="High">High - Within 2-3 days</option>
+                        <option value="Critical">Critical - Immediately</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('submitNeedModal')">Cancel</button>
+                <button class="btn-submit-modal" onclick="submitNeed()">📋 Submit Need</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Volunteer Request Modal -->
+    <div id="requestVolunteerModal" class="modal-overlay" onclick="if(event.target == this) closeVolunteerRequestModal()">
+        <div class="modal-content">
+            <header class="modal-header blue" style="background: linear-gradient(135deg, #1976d2, #1565c0); padding: 20px 24px; color: white;">
+                <h2 style="margin: 0; display: flex; align-items: center; justify-content: space-between;">
+                    🙋‍♂️ Request a Volunteer
+                    <span style="cursor: pointer; font-size: 24px; line-height: 1;" onclick="closeVolunteerRequestModal()">&times;</span>
+                </h2>
+            </header>
+            <form id="volunteerRequestForm" onsubmit="submitVolunteerRequest(event)">
+                <div class="modal-body" style="padding: 24px;">
+                    <div class="form-group">
+                        <label>Help Type / Skill Needed</label>
+                        <select id="reqSkill" class="form-control" required>
+                            <option value="">Select a category...</option>
+                            <option value="Medical">Medical Support</option>
+                            <option value="Electrical">Electrical Works</option>
+                            <option value="Water Treatment">Water Treatment</option>
+                            <option value="General Labor">General Labor</option>
+                            <option value="Delivery/Transport">Delivery / Transport</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Urgency Level</label>
+                        <select id="reqUrgency" class="form-control" required>
+                            <option value="Low">Low - Flexible</option>
+                            <option value="Medium" selected>Medium - Normal</option>
+                            <option value="High">High - Priority</option>
+                            <option value="Critical">Critical - Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Detailed Description</label>
+                        <textarea id="reqDesc" class="form-control" rows="4" placeholder="Explain what help you need specifically..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Location Detail</label>
+                        <input type="text" id="reqLocation" class="form-control" placeholder="e.g., 12 Gandhi Street" required>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 20px 24px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 12px;">
+                    <button type="button" class="btn-cancel" onclick="closeVolunteerRequestModal()">Cancel</button>
+                    <button type="submit" class="btn-submit-modal" style="background: #1976d2;">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastWrapper" class="toast-container"></div>
+
+    <!-- Custom JS -->
+    <script src="../js/pages/community-dashboard.js"></script>
+</body>
+</html>

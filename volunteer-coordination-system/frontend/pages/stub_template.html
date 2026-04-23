@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Under Development | Smart Resource Allocation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/variables.css">
+    <style>
+        .placeholder-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 100px);
+            text-align: center;
+            background: #f8f9ff;
+            border-radius: 20px;
+            margin: 20px;
+            color: #1a237e;
+        }
+        .placeholder-icon { font-size: 80px; margin-bottom: 20px; }
+        .placeholder-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+        .placeholder-desc { font-size: 16px; color: #666; max-width: 500px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="logo-icon">🤝</span>
+                <span class="logo-text">SmartResource</span>
+            </div>
+            <nav class="sidebar-nav">
+                <!-- Links injected by sidebar.js -->
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="user-avatar-sm" id="sidebarAvatar">?</div>
+                    <div class="user-details-sm">
+                        <span class="name" id="sidebarUserName">Loading...</span>
+                        <span class="role">User</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <div class="main-wrapper">
+            <div class="placeholder-content">
+                <div class="placeholder-icon">🛠️</div>
+                <div class="placeholder-title">Page Coming Soon</div>
+                <div class="placeholder-desc">
+                    The <strong>${PAGE_NAME}</strong> is currently under development. 
+                    Check back soon to see the latest updates!
+                </div>
+                <a href="dashboard.html" style="margin-top: 20px; color: var(--primary); font-weight: 600;">← Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+    <script src="../js/components/sidebar.js"></script>
+</body>
+</html>

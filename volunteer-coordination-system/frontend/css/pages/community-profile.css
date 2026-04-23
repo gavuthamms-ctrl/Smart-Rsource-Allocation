@@ -1,0 +1,86 @@
+/* Custom styles for My Profile page */
+:root {
+    --community-primary: #1b5e20;
+    --community-light: #43a047;
+    --text-dark: #212121;
+    --text-gray: #757575;
+    --white: #ffffff;
+}
+
+.profile-container {
+    padding: 32px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Header Card */
+.profile-header-card {
+    background: white; border-radius: 20px; padding: 40px;
+    display: flex; align-items: center; gap: 32px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 32px;
+    border-left: 8px solid var(--community-light);
+}
+
+.p-avatar-lg {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: var(--community-primary); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; font-weight: 700; position: relative;
+}
+
+.edit-overlay {
+    position: absolute; bottom: 0; right: 0; background: white;
+    width: 32px; height: 32px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer;
+}
+
+.p-id-info { flex: 1; }
+.p-id-info h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.p-badge { background: #e8f5e9; color: #2e7d32; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; display: inline-block; margin-bottom: 8px; }
+.p-loc { display: block; font-size: 14px; color: #666; }
+
+.p-stats { display: flex; gap: 24px; text-align: center; }
+.stat-item { display: flex; flex-direction: column; }
+.stat-val { font-size: 20px; font-weight: 700; color: var(--community-primary); }
+.stat-lab { font-size: 11px; color: #999; text-transform: uppercase; font-weight: 600; }
+
+/* Profile Form */
+.profile-form-card {
+    background: white; border-radius: 20px; padding: 32px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 32px;
+}
+
+.form-section { margin-bottom: 32px; }
+.form-section h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 12px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 8px; }
+.form-control { width: 100%; padding: 12px 16px; border: 1.5px solid #eee; border-radius: 10px; font-size: 14px; outline: none; transition: border-color 0.3s; }
+.form-control:focus { border-color: var(--community-light); }
+.form-control:disabled { background: #f9f9f9; color: #999; cursor: not-allowed; }
+
+textarea.form-control { resize: vertical; min-height: 100px; }
+
+/* Toggles */
+.toggle-group { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.toggle-label { font-size: 14px; color: #444; }
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--community-light); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* Danger Zone */
+.danger-zone { border: 1px dashed #ffcdd2; border-radius: 16px; padding: 24px; background: #fffbfa; }
+.danger-zone h3 { color: #d32f2f; margin-bottom: 12px; }
+.danger-btn { color: #d32f2f; background: transparent; border: 1.5px solid #d32f2f; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.danger-btn:hover { background: #d32f2f; color: white; }
+
+/* Save Button */
+.save-btn-container { position: sticky; bottom: 32px; background: rgba(255,255,255,0.8); backdrop-filter: blur(8px); padding: 20px; border-radius: 16px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); text-align: center; }
+.btn-save-profile { background: var(--community-primary); color: white; border: none; padding: 14px 60px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3); }
+.btn-save-profile:hover { transform: translateY(-2px); }

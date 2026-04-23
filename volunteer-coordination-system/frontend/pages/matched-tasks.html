@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Matched Tasks | Smart Resource Allocation</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/pages/matched-tasks.css">
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">🤝</span>
+            <span class="logo-text">SmartResource</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <!-- Content injected by sidebar.js -->
+        </nav>
+
+        <div class="sidebar-footer">
+            <div id="matchScoreBadge" class="match-pill">🎯 0% Match</div>
+            <div class="sidebar-user">
+                <div id="sidebarAvatar" class="avatar-circle">V</div>
+                <div class="user-info">
+                    <span id="sidebarUserName" class="name">Volunteer</span>
+                    <span class="role">Volunteer</span>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
+        </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar">
+            <div class="navbar-left">
+                <button class="hamburger" id="hamburger">☰</button>
+                <span class="page-title">My Matched Tasks</span>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="notif-bell">
+                    🔔<span class="notif-badge" id="criticalBadge">0</span>
+                </div>
+                <div class="nav-profile">
+                    <div id="navAvatar" class="avatar-circle" style="width:32px; height:32px; font-size:12px;">V</div>
+                    <div class="user-info" style="text-align: left;">
+                        <span id="navUserName" class="name" style="font-size:13px;">Volunteer</span>
+                        <span class="role" style="font-size:11px;">Volunteer</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+
+            <!-- SECTION 1: PAGE HEADER -->
+            <div class="page-header-row">
+                <div>
+                    <h2>🎯 My Matched Tasks</h2>
+                    <p id="pageSubtitle" class="page-subtitle">Finding the best opportunities for you...</p>
+                </div>
+                <button class="btn-refresh" onclick="refreshMatches()">
+                    🔄 Refresh Matches
+                </button>
+            </div>
+
+            <!-- STATS STRIP -->
+            <div class="stats-strip">
+                <div class="stat-box">
+                    <span class="stat-number blue" id="totalMatches">0</span>
+                    <span class="stat-label">Total Matches</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-box">
+                    <span class="stat-number red" id="criticalCount">0</span>
+                    <span class="stat-label">Critical Needs</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-box">
+                    <span class="stat-number green" id="nearYouCount">0</span>
+                    <span class="stat-label">In Your Area</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-box">
+                    <span class="stat-number orange" id="newTodayCount">0</span>
+                    <span class="stat-label">New Today</span>
+                </div>
+            </div>
+
+            <!-- FILTER BAR -->
+            <div class="filter-bar">
+                <div class="search-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search tasks by title, skill or location..." />
+                </div>
+                
+                <select id="priorityFilter" class="filter-select">
+                    <option value="">All Priorities</option>
+                    <option value="Critical">🔴 Critical</option>
+                    <option value="High">🟠 High</option>
+                    <option value="Medium">🔵 Medium</option>
+                    <option value="Low">⚪ Low</option>
+                </select>
+                
+                <select id="locationFilter" class="filter-select">
+                    <option value="">All Locations</option>
+                    <option value="Palladam">Palladam</option>
+                    <option value="Ukkadam">Ukkadam</option>
+                    <option value="Peelamedu">Peelamedu</option>
+                    <option value="Coimbatore">Coimbatore</option>
+                </select>
+                
+                <select id="skillFilter" class="filter-select">
+                    <option value="">All Skills</option>
+                    <option value="exact">Exact Match Only</option>
+                    <option value="partial">Partial Match</option>
+                </select>
+                
+                <select id="sortFilter" class="filter-select">
+                    <option value="match">Best Match First</option>
+                    <option value="priority">Priority First</option>
+                    <option value="newest">Newest First</option>
+                    <option value="location">Nearest First</option>
+                </select>
+
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" id="cardViewBtn" onclick="switchView('card')">▦</button>
+                    <button class="view-toggle-btn" id="listViewBtn" onclick="switchView('list')">☰</button>
+                </div>
+                
+                <button class="btn-clear" id="clearAllBtn">Clear All</button>
+            </div>
+
+            <p class="filter-result-count" id="filterResultCount"></p>
+
+            <!-- TWO COLUMN LAYOUT -->
+            <div class="two-column-layout">
+
+                <!-- LEFT: TASK CARDS -->
+                <div class="left-column">
+                    <!-- CARD VIEW -->
+                    <div id="cardView">
+                        <div id="taskCardsContainer">
+                            <div class="loading-spinner">
+                                ⏳ Finding your matched tasks...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LIST VIEW -->
+                    <div id="listView" style="display:none">
+                        <table class="list-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Task Title</th>
+                                    <th>Priority</th>
+                                    <th>Location</th>
+                                    <th>Skills Match</th>
+                                    <th>Match %</th>
+                                    <th>Due Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listViewBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- RIGHT: PANEL -->
+                <div class="right-panel">
+                    
+                    <!-- SKILL BREAKDOWN -->
+                    <div class="panel-card" id="skillBreakdownCard">
+                        <h4>🎯 Your Skill Match Breakdown</h4>
+                        <p class="panel-subtext">How your skills align with current needs</p>
+                        <div id="skillBreakdownContent"></div>
+                    </div>
+
+                    <!-- QUICK PROFILE -->
+                    <div class="panel-card" id="quickProfileCard">
+                        <h4>👤 Your Profile</h4>
+                        <div id="quickProfileContent"></div>
+                        <a href="profile.html" class="update-link">✏️ Update Profile</a>
+                    </div>
+
+                    <!-- CRITICAL ALERT (hidden by default) -->
+                    <div class="critical-alert-card" id="criticalAlertBox" style="display:none">
+                        <h4>🚨 Urgent — Action Needed</h4>
+                        <p id="criticalAlertText"></p>
+                        <ul id="criticalTaskList" class="critical-list"></ul>
+                        <button class="btn-view-critical" onclick="document.getElementById('priorityFilter').value='Critical'; applyFilters();">
+                            View Critical Tasks
+                        </button>
+                    </div>
+
+                    <!-- TIPS -->
+                    <div class="tips-card">
+                        <h4>💡 Tips to Get More Matches</h4>
+                        <p class="panel-subtext">Improve your match score</p>
+                        <ul class="tips-list">
+                            <li>✅ Add more skills to unlock more tasks</li>
+                            <li>📍 Tasks near your area update every hour</li>
+                            <li>⚡ Early responders get priority ranking</li>
+                        </ul>
+                        <a href="profile.html" class="update-link">Update My Skills →</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- TASK DETAIL MODAL -->
+<div class="modal-overlay" id="taskDetailModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div>
+                <div id="detailPriorityBadge"></div>
+                <h3 id="detailTitle">Task Title</h3>
+                <p id="detailMeta" class="modal-meta">Posted 2 hours ago</p>
+            </div>
+            <button onclick="closeModal('taskDetailModal')">✕</button>
+        </div>
+        <div class="modal-body" id="taskDetailBody">
+            <!-- Dynamic Content -->
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn-report" id="detailReportLink">🚩 Report Issue</a>
+            <div>
+                <button class="btn-modal-cancel" onclick="closeModal('taskDetailModal')">Close</button>
+                <button class="btn-modal-accept" id="detailAcceptBtn">✅ Accept This Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ACCEPT CONFIRM MODAL -->
+<div class="modal-overlay" id="acceptModal">
+    <div class="modal-box small">
+        <div class="modal-header">
+            <h3>Confirm Task Acceptance</h3>
+            <button onclick="closeModal('acceptModal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="confirm-icon">✅</div>
+            <h4 id="acceptTaskTitle" style="text-align:center; margin-bottom:15px;">Accepting Task...</h4>
+            <div class="confirm-info-box" id="acceptInfoBox"></div>
+            
+            <div class="warning-box" id="busyWarning" style="display:none">
+                ⚠️ You are currently marked as Busy. Accepting this task will notify the NGO but you should update your availability.
+            </div>
+            
+            <label class="confirm-checkbox-row">
+                <input type="checkbox" id="confirmCheckbox" onchange="toggleAcceptBtn()" style="margin-top: 4px;">
+                I confirm I am available for this task and will complete it to the best of my ability.
+            </label>
+            
+            <p style="font-size: 11px; color: var(--text-gray); margin-top: 15px;">
+                Note: Once accepted, the NGO will be notified and this task will appear in My Task History.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal-cancel" onclick="closeModal('acceptModal')">Cancel</button>
+            <button class="btn-modal-accept" id="confirmAcceptBtn" disabled onclick="confirmAcceptTask()">
+                ✅ Confirm & Accept
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- REPORT ISSUE MODAL -->
+<div class="modal-overlay" id="reportModal">
+    <div class="modal-box small">
+        <div class="modal-header">
+            <h3>🚩 Report an Issue</h3>
+            <button onclick="closeModal('reportModal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <p id="reportTaskName" style="font-weight:600; margin-bottom:15px; color:var(--text-gray)"></p>
+            <div class="report-issue-pills" id="issueTypePills">
+                <!-- Dynamic Pills -->
+            </div>
+            <textarea id="reportDescription" rows="4" placeholder="Describe the issue..."></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal-cancel" onclick="closeModal('reportModal')">Cancel</button>
+            <button class="btn-modal-accept red" onclick="submitReport()">Submit Report</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<!-- Sidebar Component -->
+<script src="../js/components/sidebar.js"></script>
+<!-- Page JS -->
+<script src="../js/pages/matched-tasks.js"></script>
+</body>
+</html>

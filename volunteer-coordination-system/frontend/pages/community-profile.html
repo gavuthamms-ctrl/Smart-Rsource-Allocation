@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Smart Resource Allocation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pages/community-dashboard.css">
+    <link rel="stylesheet" href="../css/pages/community-profile.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <span style="font-size: 24px;">🤝</span>
+                    <span class="logo-text">SmartResource</span>
+                </div>
+                <div class="comm-badge">🌍 Community Member</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="community-dashboard.html" class="nav-link">
+                    <i>🏠</i> My Dashboard
+                </a>
+                <a href="community-needs.html" class="nav-link">
+                    <i>🆘</i> My Needs
+                </a>
+                <a href="community-volunteers.html" class="nav-link">
+                    <i>🙋</i> Find Volunteers
+                </a>
+                <a href="chatbox.html" class="nav-link">
+                    <i>💬</i> Community Chatbox
+                </a>
+                <a href="community-profile.html" class="nav-link active">
+                    <i>⚙️</i> My Profile
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">P</div>
+                    <div class="user-details">
+                        <span class="name user-name">Loading...</span>
+                        <span class="role">Community Member</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Navbar -->
+            <header class="navbar">
+                <div class="page-title">My Profile Settings</div>
+                <div class="navbar-right">
+                    <button class="report-btn-nav">🆘 Report Urgent</button>
+                    <div class="avatar" style="width: 32px; height: 32px; font-size: 14px;">P</div>
+                </div>
+            </header>
+
+            <div class="profile-container">
+                <!-- Header Card -->
+                <section class="profile-header-card">
+                    <div id="p-avatar" class="p-avatar-lg">P</div>
+                    <div class="p-id-info">
+                        <span class="p-badge">🌍 Community Member</span>
+                        <h1 class="user-name">Prasanna</h1>
+                        <span id="p-city" class="p-loc">📍 Palladam</span>
+                    </div>
+                    <div class="p-stats">
+                        <div class="stat-item">
+                            <span class="stat-val">2</span>
+                            <span class="stat-lab">Needs Reported</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-val">1</span>
+                            <span class="stat-lab">Needs Resolved</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Profile Form -->
+                <section class="profile-form-card">
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" id="editFirstName" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" id="editLastName" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address (Read-only)</label>
+                            <input type="email" id="editEmail" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="editPhone" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>My Address</h3>
+                        <div class="form-group">
+                            <label>Street Address</label>
+                            <input type="text" id="editAddress" class="form-control">
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" id="editCity" class="form-control" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>State</label>
+                                <input type="text" value="Tamil Nadu" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>My Current Need</h3>
+                        <div class="form-group">
+                            <label>What do you need help with?</label>
+                            <textarea id="editNeeds" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Priority Level</label>
+                            <div style="display: flex; gap: 15px; margin-top: 10px;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-weight: 500;">
+                                    <input type="radio" name="priority" value="Low"> Low
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-weight: 500;">
+                                    <input type="radio" name="priority" value="Medium"> Medium
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-weight: 500;">
+                                    <input type="radio" name="priority" value="High"> High
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-weight: 500;">
+                                    <input type="radio" name="priority" value="Critical"> Critical
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Notification Preferences</h3>
+                        <div class="toggle-group">
+                            <span class="toggle-label">Volunteer assigned to my need</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-group">
+                            <span class="toggle-label">NGO announcements</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="toggle-group">
+                            <span class="toggle-label">Urgent alerts in my area</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-section" style="margin-bottom: 0;">
+                        <h3>Danger Zone</h3>
+                        <div class="danger-zone">
+                            <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Deleting your account is permanent and cannot be undone.</p>
+                            <button class="danger-btn">Delete My Account</button>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="save-btn-container">
+                    <button id="saveBtn" class="btn-save-profile" onclick="saveProfile()">Save Changes</button>
+                </div>
+
+                <!-- Activity History -->
+                <section style="margin-bottom: 50px;">
+                    <h3 style="margin-bottom: 24px;">📋 My Activity History</h3>
+                    <div id="activityHistoryList">
+                        <!-- History items rendering in JS -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastWrapper" class="toast-container"></div>
+
+    <script src="../js/pages/community-profile.js"></script>
+</body>
+</html>

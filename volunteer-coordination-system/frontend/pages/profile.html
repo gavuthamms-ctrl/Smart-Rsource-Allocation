@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Smart Resource Allocation</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/pages/profile.css">
+</head>
+<body>
+    <div class="app-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="logo-icon">🤝</span>
+                <span class="logo-text">SmartResource</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon">🏠</span>
+                    <span class="label">Dashboard Overview</span>
+                </a>
+                <a href="matched-tasks.html" class="nav-item">
+                    <span class="icon">🎯</span>
+                    <span class="label">My Matched Tasks</span>
+                </a>
+                <a href="task-history.html" class="nav-item">
+                    <span class="icon">📋</span>
+                    <span class="label">My Task History</span>
+                </a>
+                <a href="chatbox.html" class="nav-item">
+                    <span class="icon">💬</span>
+                    <span class="label">Community Chatbox</span>
+                </a>
+                <a href="resources.html" class="nav-item">
+                    <span class="icon">📚</span>
+                    <span class="label">Skill Resources</span>
+                </a>
+                <a href="profile.html" class="nav-item active">
+                    <span class="icon">⚙️</span>
+                    <span class="label">My Profile</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="match-badge" id="sidebarMatchBadge">
+                    🎯 <span id="sidebarMatchVal">88</span>% Match
+                </div>
+                <div class="sidebar-user">
+                    <div class="user-avatar-sm" id="sidebarAvatar">D</div>
+                    <div class="user-details-sm">
+                        <span class="name" id="sidebarUserName">Dharun</span>
+                        <span class="role" id="sidebarUserRole">Volunteer</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            
+            <!-- TOP NAVBAR -->
+            <header class="top-navbar">
+                <div class="nav-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <h1 class="page-title">My Profile</h1>
+                </div>
+                
+                <div class="nav-right">
+                    <div class="nav-actions">
+                        <button class="notification-btn">🔔<span class="badge"></span></button>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <span class="user-name" id="navbarUserName">User</span>
+                            <span class="user-role" id="navbarUserRole">Volunteer</span>
+                        </div>
+                        <div class="user-avatar" id="navbarAvatar">?</div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                
+                <!-- SECTION 1: HERO BANNER -->
+                <section class="hero-banner">
+                    <div class="hero-left">
+                        <h2 class="hero-title">⚙️ My Profile</h2>
+                        <p class="hero-subtitle">Manage your personal information and availability.</p>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: PROFILE GRID -->
+                <div class="profile-grid">
+                    
+                    <!-- LEFT COLUMN: OVERVIEW -->
+                    <aside class="profile-overview">
+                        <div class="profile-card overview-card">
+                            <div class="card-body">
+                                <div class="avatar-container">
+                                    <div class="large-avatar" id="profileLargeAvatar">?</div>
+                                    <div class="status-indicator" id="profileStatusDot"></div>
+                                </div>
+                                <h3 class="user-full-name" id="profileFullName">Loading...</h3>
+                                <span class="role-badge" id="profileRoleBadge">Volunteer</span>
+                                
+                                <div class="match-score-section">
+                                    <div class="score-ring">
+                                        <svg viewBox="0 0 36 36" class="circular-chart">
+                                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            <path class="circle" id="scoreCirclePath" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            <text x="18" y="20.35" class="percentage" id="scoreText">0%</text>
+                                        </svg>
+                                    </div>
+                                    <p class="score-label">Average Match Score</p>
+                                </div>
+
+                                <div class="status-toggle-section">
+                                    <label class="section-label">Current Status</label>
+                                    <div class="status-options">
+                                        <button class="status-btn active" data-status="Available" onclick="updateStatus('Available')">Available</button>
+                                        <button class="status-btn" data-status="Busy" onclick="updateStatus('Busy')">Busy</button>
+                                        <button class="status-btn" data-status="On Leave" onclick="updateStatus('On Leave')">On Leave</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-card stats-summary-card">
+                            <div class="card-header">
+                                <h4>Impact Summary</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="mini-stat-item">
+                                    <span class="stat-label">Tasks Done</span>
+                                    <span class="stat-value" id="statTasksDone">0</span>
+                                </div>
+                                <div class="mini-stat-item">
+                                    <span class="stat-label">Hours</span>
+                                    <span class="stat-value" id="statHours">0</span>
+                                </div>
+                                <div class="mini-stat-item">
+                                    <span class="stat-label">People Helped</span>
+                                    <span class="stat-value" id="statPeople">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- RIGHT COLUMN: EDIT FORM -->
+                    <main class="profile-details">
+                        <div class="profile-card form-card">
+                            <div class="card-header">
+                                <h3>Account Information</h3>
+                                <p>Update your details to stay relevant for task matching.</p>
+                            </div>
+                            <div class="card-body">
+                                <form id="profileForm">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="inputName">Full Name*</label>
+                                            <input type="text" id="inputName" required placeholder="Enter your full name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputEmail">Email Address</label>
+                                            <input type="email" id="inputEmail" readonly style="background-color: #f5f5f5; cursor: not-allowed;">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputPhone">Phone Number</label>
+                                            <input type="text" id="inputPhone" placeholder="e.g. +91 9876543210">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputLocation">Location</label>
+                                            <input type="text" id="inputLocation" placeholder="e.g. Palladam, Coimbatore">
+                                        </div>
+                                        <div class="form-group span-2">
+                                            <label for="inputSkills">Skills (Comma separated)*</label>
+                                            <textarea id="inputSkills" rows="3" required placeholder="e.g. Doctor, Driving, First Aid"></textarea>
+                                            <p class="field-help">Comma-separated skills help our algorithm match you to tasks better.</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-footer">
+                                        <button type="submit" class="save-btn" id="saveProfileBtn">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/pages/profile.js"></script>
+</body>
+</html>

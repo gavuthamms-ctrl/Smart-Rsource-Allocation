@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Volunteers | Smart Resource Allocation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pages/community-dashboard.css">
+    <link rel="stylesheet" href="../css/pages/community-volunteers.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <span style="font-size: 24px;">🤝</span>
+                    <span class="logo-text">SmartResource</span>
+                </div>
+                <div class="comm-badge">🌍 Community Member</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="community-dashboard.html" class="nav-link">
+                    <i>🏠</i> My Dashboard
+                </a>
+                <a href="community-needs.html" class="nav-link">
+                    <i>🆘</i> My Needs
+                </a>
+                <a href="community-volunteers.html" class="nav-link active">
+                    <i>🙋</i> Find Volunteers
+                </a>
+                <a href="chatbox.html" class="nav-link">
+                    <i>💬</i> Community Chatbox
+                </a>
+                <a href="community-profile.html" class="nav-link">
+                    <i>⚙️</i> My Profile
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">P</div>
+                    <div class="user-details">
+                        <span class="name user-name">Loading...</span>
+                        <span class="role">Community Member</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Navbar -->
+            <header class="navbar">
+                <div class="page-title">Find Volunteers</div>
+                <div class="navbar-right">
+                    <button class="report-btn-nav">🆘 Report Urgent</button>
+                    <div class="avatar" style="width: 32px; height: 32px; font-size: 14px;">P</div>
+                </div>
+            </header>
+
+            <div class="volunteers-container">
+                <!-- Search Strip -->
+                <section class="search-strip">
+                    <h2>Who do you need help from?</h2>
+                    <div class="search-input-wrapper">
+                        <i>🔍</i>
+                        <input type="text" placeholder="Search by skill e.g. Doctor, Electrician..." oninput="handleSearch(this.value)">
+                    </div>
+                    <div class="quick-filters">
+                        <button class="filter-pill active" onclick="filterBySkill('All', this)">All</button>
+                        <button class="filter-pill" onclick="filterBySkill('Doctor', this)">🩺 Medical</button>
+                        <button class="filter-pill" onclick="filterBySkill('Electrician', this)">⚡ Electrical</button>
+                        <button class="filter-pill" onclick="filterBySkill('Water', this)">💧 Water</button>
+                        <button class="filter-pill" onclick="filterBySkill('Road', this)">🏗️ Road Work</button>
+                        <button class="filter-pill" onclick="filterBySkill('Counsellor', this)">🧠 Counselling</button>
+                        <button class="filter-pill" onclick="filterBySkill('Driver', this)">🚗 Driver</button>
+                    </div>
+                </section>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <span>Location:</span>
+                        <span class="filter-option active">My Area</span>
+                        <span class="filter-option">All Locations</span>
+                    </div>
+                    <div class="filter-group">
+                        <span>Show:</span>
+                        <span class="filter-option active">Available Only</span>
+                        <span class="filter-option">All</span>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="stats-row">
+                    <div class="stat-item green">🙋 <span id="statTotalVolunteers">0</span> Volunteers</div>
+                    <div class="stat-item green">✅ <span id="statAvailableVolunteers">0</span> Available Now</div>
+                    <div class="stat-item blue">👥 <span id="statPeopleHelped">0</span> People Helped Total</div>
+                </div>
+
+                <!-- Volunteers Grid -->
+                <div id="volunteersGrid" class="vol-card-grid">
+                    <!-- Dynamic rendering in JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/pages/community-volunteers.js"></script>
+</body>
+</html>

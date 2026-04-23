@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Smart Resource Allocation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/pages/login.css">
+</head>
+<body>
+    <div class="login-container">
+        
+        <!-- LEFT PANEL (Branding) -->
+        <div class="branding-panel">
+            <div class="floating-circles">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="branding-content">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#ff6f00"/>
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="white" stroke-width="2"/>
+                </svg>
+                <h1>Join the Impact</h1>
+                <p class="tagline">Sign up to start coordinating and contributing to community needs.</p>
+                <p class="bottom-tagline">Making community service efficient and transparent.</p>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL (Form) -->
+        <div class="form-panel">
+            <div class="form-wrapper">
+                <div class="form-header">
+                    <h2>Create Account 🚀</h2>
+                    <p>Join the Smart Allocation network</p>
+                </div>
+
+                <label class="role-selector-label">I want to join as a:</label>
+                <div class="role-selector" id="roleSelector">
+                    <div class="role-pill active" onclick="selectRole('volunteer', this)">
+                        <span>🙋</span> Volunteer
+                    </div>
+                    <div class="role-pill" onclick="selectRole('community', this)">
+                        <span>👥</span> Community
+                    </div>
+                </div>
+
+                <form id="registerForm">
+                    <div style="display: flex; gap: 15px;">
+                        <!-- First Name -->
+                        <div class="input-group" style="flex: 1;">
+                            <label for="firstName">First Name</label>
+                            <div class="input-container">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="firstName" placeholder="First Name" required>
+                            </div>
+                        </div>
+                        <!-- Last Name -->
+                        <div class="input-group" style="flex: 1;">
+                            <label for="lastName">Last Name</label>
+                            <div class="input-container">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="lastName" placeholder="Last Name" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="input-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-container">
+                            <span class="input-icon">📧</span>
+                            <input type="email" id="email" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-container">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="password" placeholder="Min 6 characters" required>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="input-container">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                        </div>
+                    </div>
+
+                    <!-- Register Button -->
+                    <button type="submit" class="login-btn" id="registerBtn">
+                        <div class="spinner" id="btnSpinner"></div>
+                        <span id="btnText">Create Account</span>
+                    </button>
+                </form>
+
+                <p class="register-text">
+                    Already have an account? <a href="login.html">Login here</a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- JS -->
+    <script src="../js/pages/register.js"></script>
+</body>
+</html>

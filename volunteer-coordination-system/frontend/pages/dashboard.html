@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Dashboard | Smart Resource Allocation</title>
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Global Variables & Common Styles -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <!-- Dashboard Specific CSS -->
+    <link rel="stylesheet" href="../css/pages/dashboard.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="logo-icon">🤝</span>
+                <span class="logo-text">SmartResource</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <!-- Links injected by sidebar.js -->
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="match-badge" id="sidebarMatchBadge">
+                    🎯 <span id="sidebarMatchVal">--</span>% Match
+                </div>
+                <div class="sidebar-user">
+                    <div class="user-avatar-sm" id="sidebarAvatar">?</div>
+                    <div class="user-details-sm">
+                        <span class="name" id="sidebarUserName">Loading...</span>
+                        <span class="role">Volunteer</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN WRAPPER -->
+        <div class="main-wrapper">
+            <!-- TOP NAVBAR -->
+            <header class="top-navbar">
+                <div class="navbar-left">
+                    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                    <h1 class="nav-title">Dashboard Overview</h1>
+                </div>
+                <div class="navbar-right">
+                    <div class="notif-bell" id="notifBell">
+                        <span>🔔</span>
+                        <div class="notif-badge" id="notifBadge" style="display:none">0</div>
+                        
+                        <!-- NOTIFICATION DROPDOWN -->
+                        <div class="notif-dropdown" id="notifDropdown" style="display:none">
+                            <div class="notif-header">
+                                <h3>Notifications</h3>
+                                <button id="markAllRead" class="mark-all-btn">Mark all as read</button>
+                            </div>
+                            <div class="notif-list" id="notifList">
+                                <div class="notif-empty">No new notifications</div>
+                            </div>
+                            <div class="notif-footer">
+                                <a href="task-history.html">View all activity</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nav-profile">
+                        <div class="nav-user-meta">
+                            <span class="name" id="navName">User</span>
+                            <span class="role">Volunteer</span>
+                        </div>
+                        <div class="nav-avatar" id="navAvatar">?</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <main class="page-content">
+                <!-- SECTION 1: PERSONAL HEADER -->
+                <header class="personal-header">
+                    <div class="greeting-block">
+                        <h2 id="greetingText">Good Morning, --! 👋</h2>
+                        <p class="subtitle" id="vSubtitle">Here's what needs your expertise today.</p>
+                        <p class="current-date" id="dateText">--</p>
+                    </div>
+                    <div class="status-toggle-wrap">
+                        <div id="statusToggle" class="status-pill available" onclick="handleStatusToggle()">
+                            <span id="statusIcon">🟢</span> <span id="statusLabel">Available</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- SECTION 2: PERSONAL STATS -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon-wrap" style="background:#1a237e">📋</div>
+                            <span class="stat-label">My Assigned Tasks</span>
+                        </div>
+                        <div class="stat-body">
+                            <span class="stat-value" id="statsAssigned">--</span>
+                            <span class="stat-sublabel" id="statsAssignedSub">Active right now</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon-wrap" style="background:#2e7d32">✅</div>
+                            <span class="stat-label">Tasks Completed</span>
+                        </div>
+                        <div class="stat-body">
+                            <span class="stat-value" id="statsCompleted">--</span>
+                            <span class="stat-sublabel" id="statsCompletedSub">Total contribution</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon-wrap" style="background:#e65100">👥</div>
+                            <span class="stat-label">People I Helped</span>
+                        </div>
+                        <div class="stat-body">
+                            <span class="stat-value" id="statsHelped">--</span>
+                            <span class="stat-sublabel" id="statsHelpedSub">Lives impacted</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card match-score-card" id="matchScoreCard"
+                        title="Your match score is calculated based on how well your skills align with current community needs in your area.">
+                        <div class="score-ring-wrap">
+                            <svg class="score-svg" viewBox="0 0 100 100">
+                                <circle class="score-bg" cx="50" cy="50" r="40"></circle>
+                                <circle class="score-bar" id="scoreBar" cx="50" cy="50" r="40"
+                                    stroke-dasharray="0 251.2"></circle>
+                            </svg>
+                            <div class="score-text-center"><span id="statsMatch">--</span>%</div>
+                        </div>
+                        <div class="stat-body">
+                            <span class="stat-label">My Match Score</span>
+                            <span class="stat-sublabel">Skills × Location fit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: 2-COLUMN VIEW -->
+                <div class="dashboard-personal-grid">
+                    <!-- LEFT COLUMN -->
+                    <div class="content-col-left">
+                        <!-- BLOCK A: MATCHED TASKS -->
+                        <div class="section-head">
+                            <div>
+                                <h3 class="section-title">🎯 Tasks Matched To You</h3>
+                                <p class="section-subtitle">Based on your skills and location — act fast!</p>
+                            </div>
+                        </div>
+                        <div class="matched-tasks-list" id="matchedTasksList">
+                            <!-- Cards injected here -->
+                            <div class="empty-state">Finding tasks for you...</div>
+                        </div>
+                        <a href="volunteers.html" class="view-more-link">View All Matched Tasks →</a>
+
+                        <!-- BLOCK B: ACTIVE TASKS -->
+                        <div class="active-tasks-card">
+                            <div class="section-head">
+                                <h3 class="section-title">📋 My Active Tasks</h3>
+                            </div>
+                            <div id="activeTasksList">
+                                <!-- Items injected here -->
+                                <div class="empty-state">No active tasks yet.</div>
+                            </div>
+                            <a href="task-history.html" class="view-more-link">View All My Tasks →</a>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="content-col-right">
+                        <!-- BLOCK C: MINI MAP -->
+                        <div class="mini-map-card">
+                            <div class="section-head">
+                                <div>
+                                    <h3 class="section-title">🗺️ Needs Near Me</h3>
+                                    <p class="section-subtitle" id="mapLocLabel">📍 Loading...</p>
+                                </div>
+                            </div>
+                            <div id="miniMap"></div>
+                            <div class="map-legend-row">
+                                <div class="legend-p">
+                                    <div class="leg-dot" style="background:var(--error)"></div> Critical
+                                </div>
+                                <div class="legend-p">
+                                    <div class="leg-dot" style="background:var(--warning)"></div> High
+                                </div>
+                                <div class="legend-p">
+                                    <div class="leg-dot" style="background:var(--primary)"></div> Medium
+                                </div>
+                                <div class="legend-p">
+                                    <div class="leg-dot"
+                                        style="background:#1565c0; border:2px solid white; box-shadow:0 0 5px rgba(0,0,0,0.3)">
+                                    </div> You
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BLOCK D: RECENT ACTIVITY -->
+                        <div class="activity-card">
+                            <div class="section-head">
+                                <h3 class="section-title">🔔 My Recent Activity</h3>
+                            </div>
+                            <div class="activity-list" id="activityList">
+                                <!-- Activity injected here -->
+                                <div class="empty-state">No recent activity.</div>
+                            </div>
+                        </div>
+
+                        <!-- BLOCK E: URGENT ALERTS CHAT -->
+                        <div class="urgent-chat-card">
+                            <div class="section-head">
+                                <h3 class="section-title">🚨 Chat Widget</h3>
+                                <select id="roomSelect" class="room-mini-select">
+                                    <option value="Urgent Alerts">🚨 Urgent Alerts</option>
+                                    <option value="Ukkadam Local">📍 Ukkadam Local</option>
+                                    <option value="General Community">🌐 General</option>
+                                </select>
+                            </div>
+                            <div class="chat-window" id="chatWindow">
+                                <div class="chat-welcome">
+                                    <p>Welcome to the Dashboard Chat. Select a room above!</p>
+                                </div>
+                            </div>
+                            <!-- Changed from form to div to avoid refresh -->
+                            <div class="chat-form" id="chatForm">
+                                <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off">
+                                <button type="button" id="sendBtn">➤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toast-container"></div>
+
+    <!-- TASK DETAIL MODAL -->
+    <div class="modal-overlay" id="taskDetailModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div>
+                    <div id="detailPriorityBadge"></div>
+                    <h3 id="detailTitle">Task Title</h3>
+                    <p id="detailMeta" class="modal-meta">Posted 2 hours ago</p>
+                </div>
+                <button onclick="closeModal('taskDetailModal')">✕</button>
+            </div>
+            <div class="modal-body" id="taskDetailBody">
+                <!-- Dynamic Content -->
+            </div>
+            <div class="modal-footer">
+                <div class="modal-footer-left">
+                    <button class="btn-modal-cancel" onclick="closeModal('taskDetailModal')">Close</button>
+                </div>
+                <div class="modal-footer-right">
+                    <button class="btn-modal-accept" id="detailAcceptBtn">✅ Accept This Task</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REPORT ISSUE MODAL -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-box small">
+            <div class="modal-header">
+                <div>
+                    <h3>🚩 Report an Issue</h3>
+                    <p id="reportTaskName" class="modal-meta">Reporting: Task Name</p>
+                </div>
+                <button onclick="closeModal('reportModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <span class="detail-label">Issue Type</span>
+                <div class="report-issue-pills" id="issueTypePills">
+                    <div class="report-pill" onclick="selectReportPill(this)">Incorrect Skills</div>
+                    <div class="report-pill" onclick="selectReportPill(this)">Wrong Location</div>
+                    <div class="report-pill" onclick="selectReportPill(this)">Task Already Filled</div>
+                    <div class="report-pill" onclick="selectReportPill(this)">Inappropriate</div>
+                    <div class="report-pill" onclick="selectReportPill(this)">Other</div>
+                </div>
+                <span class="detail-label">Description</span>
+                <textarea id="reportDescription" rows="4" placeholder="Please provide more details about the issue..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" onclick="closeModal('reportModal')">Cancel</button>
+                <button class="btn-modal-accept red" onclick="submitReport()">Submit Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Sidebar Component -->
+    <script src="../js/components/sidebar.js"></script>
+    <!-- Dashboard JS -->
+    <script src="../js/pages/dashboard.js"></script>
+</body>
+
+</html>

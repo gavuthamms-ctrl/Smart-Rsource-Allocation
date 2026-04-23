@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0"/>
+    <title>
+        NGO Community Chatbox | Smart Resource Allocation
+    </title>
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?
+        family=Poppins:wght@400;500;600;700
+        &display=swap"
+        rel="stylesheet"/>
+    <!-- EXACT SAME CSS as chatbox.html -->
+    <link rel="stylesheet"
+          href="../css/pages/chatbox.css"/>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR (built by JS based on role=ngo) -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <span class="logo-emoji">🤝</span>
+            <span class="logo-text">SmartResource</span>
+        </div>
+        <div class="sidebar-role-badge"
+             id="sidebarRoleBadge">
+        </div>
+        <nav class="sidebar-nav" id="sidebarNav">
+        </nav>
+        <div class="sidebar-bottom" id="sidebarBottom">
+        </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar" id="topNavbar">
+            <button class="hamburger-btn"
+                    onclick="toggleSidebar()">
+                ☰
+            </button>
+            <h2 class="navbar-title">
+                Community Chatbox
+            </h2>
+            <div class="navbar-right"
+                 id="navbarRight">
+            </div>
+        </header>
+
+        <!-- CHAT LAYOUT (3 panels) -->
+        <div class="chat-layout">
+
+            <!-- PANEL 1: ROOMS -->
+            <aside class="rooms-panel" id="roomsPanel">
+
+                <div class="rooms-header">
+                    <span class="rooms-title">
+                        💬 Rooms
+                    </span>
+                    <!-- NGO sees + button (shown by JS) -->
+                    <button class="add-room-btn"
+                            id="addRoomBtn"
+                            onclick="openCreateRoomModal()"
+                            style="display:none">
+                        +
+                    </button>
+                </div>
+
+                <div class="rooms-search">
+                    <span class="rooms-search-icon">
+                        🔍
+                    </span>
+                    <input type="text"
+                           id="roomSearchInput"
+                           placeholder="Search rooms..."
+                           oninput="filterRooms(
+                               this.value)"/>
+                </div>
+
+                <div class="rooms-list" id="roomsList">
+                    <div class="rooms-loading">
+                        Loading rooms...
+                    </div>
+                </div>
+
+                <div class="rooms-user-card"
+                     id="roomsUserCard">
+                </div>
+
+            </aside>
+
+            <!-- PANEL 2: CHAT AREA -->
+            <main class="chat-area" id="chatArea">
+
+                <!-- CHAT HEADER -->
+                <div class="chat-header"
+                     id="chatHeader">
+                    <div class="chat-header-left">
+                        <div class="chat-room-icon"
+                             id="chatRoomIcon">
+                        </div>
+                        <div class="chat-room-info">
+                            <h3 id="chatRoomName">
+                                Select a room
+                            </h3>
+                            <p id="chatRoomDesc">
+                                Choose a room to start
+                                chatting
+                            </p>
+                        </div>
+                    </div>
+                    <div class="chat-header-center">
+                        <span class="member-count-badge"
+                              id="memberCountBadge">
+                            👥 7 members
+                        </span>
+                    </div>
+                    <div class="chat-header-right">
+                        <button class="header-icon-btn"
+                                onclick="toggleSearchBar()"
+                                title="Search messages">
+                            🔍
+                        </button>
+                        <button class="header-icon-btn"
+                                title="Pinned messages">
+                            📌
+                        </button>
+                        <button class="header-icon-btn"
+                                title="More options">
+                            ⋮
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MESSAGE SEARCH BAR -->
+                <div class="message-search-bar"
+                     id="messageSearchBar"
+                     style="display:none">
+                    <input type="text"
+                           id="messageSearchInput"
+                           placeholder="Search messages..."
+                           oninput="searchMessages(
+                               this.value)"/>
+                    <span id="searchResultCount">
+                    </span>
+                    <button onclick="toggleSearchBar()">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- URGENT ROOM BANNER -->
+                <div class="urgent-room-banner"
+                     id="urgentBanner"
+                     style="display:none">
+                    <div class="urgent-banner-left">
+                        <span>🚨</span>
+                        <span>URGENT ROOM — Post only
+                              real emergencies. All
+                              members notified
+                              immediately.</span>
+                    </div>
+                    <div class="urgent-banner-right">
+                        <span class="pulse-dot
+                              red-pulse">
+                        </span>
+                        <span>Live Monitoring</span>
+                    </div>
+                </div>
+
+                <!-- MESSAGES FEED -->
+                <div class="messages-feed"
+                     id="messagesFeed">
+                    <div class="messages-welcome">
+                        <span class="welcome-icon">
+                            💬
+                        </span>
+                        <p>Select a room from the left
+                           panel to start chatting</p>
+                    </div>
+                </div>
+
+                <!-- TYPING INDICATOR -->
+                <div class="typing-indicator"
+                     id="typingIndicator"
+                     style="display:none">
+                    <div class="typing-bubble">
+                        <span class="typing-dot">
+                        </span>
+                        <span class="typing-dot">
+                        </span>
+                        <span class="typing-dot">
+                        </span>
+                    </div>
+                    <span class="typing-text"
+                          id="typingText">
+                        Someone is typing...
+                    </span>
+                </div>
+
+                <!-- REPLY MODE BAR -->
+                <div class="reply-bar" id="replyBar"
+                     style="display:none">
+                    <div class="reply-bar-content">
+                        <span class="reply-icon">
+                            📩
+                        </span>
+                        <div class="reply-info">
+                            <span class="reply-label">
+                                Replying to
+                            </span>
+                            <strong class="reply-name"
+                                    id="replyToName">
+                            </strong>
+                            <p class="reply-preview"
+                               id="replyPreview">
+                            </p>
+                        </div>
+                    </div>
+                    <button class="reply-cancel-btn"
+                            onclick="cancelReply()">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- IMAGE PREVIEW IN INPUT -->
+                <div class="input-image-preview"
+                     id="inputImagePreview"
+                     style="display:none">
+                    <img id="inputImageThumb" alt=""/>
+                    <span id="inputImageName"></span>
+                    <button onclick="removeImage()">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- MESSAGE INPUT BAR -->
+                <div class="input-bar">
+                    <button class="urgent-input-btn"
+                            id="urgentInputBtn"
+                            onclick="toggleUrgentMode()"
+                            title="Post urgent alert">
+                        🚨 Urgent
+                    </button>
+
+                    <label class="attach-btn"
+                           title="Attach image">
+                        📎
+                        <input type="file"
+                               id="imageFileInput"
+                               accept="image/*"
+                               style="display:none"
+                               onchange="handleImageSelect(
+                                   this.files[0])"/>
+                    </label>
+
+                    <div class="input-wrapper">
+                        <textarea
+                            id="messageInput"
+                            rows="1"
+                            placeholder="Message..."
+                            onkeydown="handleKeyDown(
+                                event)"
+                            oninput="handleInputChange()">
+                        </textarea>
+                    </div>
+
+                    <button class="emoji-input-btn"
+                            onclick="toggleEmojiPicker()"
+                            title="Add emoji">
+                        😊
+                    </button>
+
+                    <!-- NGO ANNOUNCE BUTTON -->
+                    <!-- shown by JS for NGO role -->
+                    <button class="announce-input-btn"
+                            id="announceInputBtn"
+                            onclick="toggleAnnounceMode()"
+                            style="display:none"
+                            title="Post announcement">
+                        📢
+                    </button>
+
+                    <button class="send-btn"
+                            id="sendBtn"
+                            onclick="sendMessage()"
+                            disabled>
+                        ➤
+                    </button>
+                </div>
+
+                <!-- EMOJI PICKER -->
+                <div class="emoji-picker"
+                     id="emojiPicker"
+                     style="display:none">
+                    <div class="emoji-tabs">
+                        <button class="emoji-tab active"
+                            onclick="showEmojiCat(
+                                'smileys',this)">
+                            😊
+                        </button>
+                        <button class="emoji-tab"
+                            onclick="showEmojiCat(
+                                'gestures',this)">
+                            👍
+                        </button>
+                        <button class="emoji-tab"
+                            onclick="showEmojiCat(
+                                'hearts',this)">
+                            ❤️
+                        </button>
+                        <button class="emoji-tab"
+                            onclick="showEmojiCat(
+                                'objects',this)">
+                            🏆
+                        </button>
+                        <button class="emoji-tab"
+                            onclick="showEmojiCat(
+                                'nature',this)">
+                            🌍
+                        </button>
+                    </div>
+                    <div class="emoji-grid"
+                         id="emojiGrid">
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- PANEL 3: MEMBERS -->
+            <aside class="members-panel"
+                   id="membersPanel">
+
+                <!-- ONLINE MEMBERS -->
+                <div class="panel-section">
+                    <div class="panel-section-header">
+                        <span class="panel-section-title">
+                            👥 Online Now
+                        </span>
+                        <span class="online-count-badge"
+                              id="onlineCountBadge">
+                        </span>
+                    </div>
+                    <div id="membersList"></div>
+                </div>
+
+                <div class="panel-divider"></div>
+
+                <!-- ACTIVE ALERTS -->
+                <div class="panel-section">
+                    <div class="panel-section-header">
+                        <span class="pulse-dot
+                              red-pulse small-dot">
+                        </span>
+                        <span class="panel-section-title">
+                            🚨 Active Alerts
+                        </span>
+                    </div>
+                    <div id="activeAlertsList">
+                        <p class="no-alerts-msg">
+                            ✅ No active emergencies
+                        </p>
+                    </div>
+                </div>
+
+                <div class="panel-divider"></div>
+
+                <!-- PINNED MESSAGES -->
+                <div class="panel-section">
+                    <div class="panel-section-header">
+                        <span class="panel-section-title">
+                            📌 Pinned Messages
+                        </span>
+                    </div>
+                    <div id="pinnedMessagesList">
+                        <p class="no-pinned-msg">
+                            No pinned messages
+                        </p>
+                    </div>
+                </div>
+
+                <div class="panel-divider"></div>
+
+                <!-- QUICK ACTIONS -->
+                <div class="panel-section">
+                    <div class="panel-section-header">
+                        <span class="panel-section-title">
+                            ⚡ Quick Actions
+                        </span>
+                    </div>
+                    <div class="quick-actions-list"
+                         id="quickActionsList">
+                    </div>
+                </div>
+
+                <!-- ROLE-SPECIFIC SECTION -->
+                <div class="panel-divider"></div>
+                <div class="panel-section"
+                     id="roleSpecificSection">
+                </div>
+
+            </aside>
+
+        </div><!-- end chat-layout -->
+    </div><!-- end main-wrapper -->
+</div><!-- end app-layout -->
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sidebar-overlay"
+     id="sidebarOverlay"
+     onclick="toggleSidebar()">
+</div>
+
+<!-- MEMBER PROFILE POPUP -->
+<div class="member-popup" id="memberPopup"
+     style="display:none">
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toastContainer"></div>
+
+<!-- EXACT SAME JS as chatbox.html -->
+<script src="../js/pages/chatbox.js"></script>
+</body>
+</html>

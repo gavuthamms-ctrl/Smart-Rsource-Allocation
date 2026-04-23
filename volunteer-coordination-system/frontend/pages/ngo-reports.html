@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics | Smart Resource Allocation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/pages/ngo-reports.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="logo">
+                    <span class="logo-icon">🤝</span>
+                    <span class="logo-text">SmartResource</span>
+                </div>
+                <div class="ngo-badge">
+                    <span class="ngo-icon">🏢</span>
+                    <span id="ngoNameText">Gavutham Foundation</span>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="ngo-dashboard.html" class="nav-link">🏠 Dashboard</a>
+                <a href="ngo-volunteers.html" class="nav-link">🙋 Volunteers</a>
+                <a href="ngo-tasks.html" class="nav-link">✅ Task Management</a>
+                <a href="ngo-community.html" class="nav-link">🌍 Community Needs</a>
+                <a href="ngo-reports.html" class="nav-link active">📊 Reports & Analytics</a>
+                <a href="ngo-resources.html" class="nav-link">📚 NGO Resources</a>
+                <a href="ngo-chatbox.html" class="nav-link">💬 Community Chatbox</a>
+                <a href="ngo-profile.html" class="nav-link">⚙️ NGO Settings</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile-row" onclick="location.href='ngo-profile.html'">
+                    <div class="sidebar-avatar" id="sidebarAvatar">G</div>
+                    <div class="sidebar-user-details">
+                        <span class="user-name" id="sidebarUserName">Gavutham</span>
+                        <span class="user-role">🏢 NGO Admin</span>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <header class="top-navbar">
+                <div class="nav-left">
+                    <button class="hamburger-btn">☰</button>
+                    <h1 class="page-title">📊 Reports & Analytics</h1>
+                </div>
+                <div class="nav-right">
+                    <div class="date-picker-wrap">
+                        <select id="dateRange" onchange="fetchReportData()">
+                            <option value="week">This Week</option>
+                            <option value="month" selected>This Month</option>
+                            <option value="3months">Last 3 Months</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                    <button class="btn-outline" onclick="exportData()">⬇️ Export Report</button>
+                    <button class="btn-primary" onclick="window.print()">🖨️ Print Report</button>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- MAIN IMPACT STATS -->
+                <section class="reports-stats-grid">
+                    <div class="report-stat-card blue">
+                        <div class="rs-icon">👥</div>
+                        <div class="rs-info">
+                            <h3 id="statTotalImpact">0</h3>
+                            <p>Total People Helped</p>
+                            <span class="rs-sub">All time impact</span>
+                        </div>
+                    </div>
+                    <div class="report-stat-card green">
+                        <div class="rs-icon">📈</div>
+                        <div class="rs-info">
+                            <h3 id="statSuccessRate">0%</h3>
+                            <p>Task Success Rate</p>
+                            <span class="rs-sub">Completed vs Goal</span>
+                        </div>
+                    </div>
+                    <div class="report-stat-card orange">
+                        <div class="rs-icon">⏱️</div>
+                        <div class="rs-info">
+                            <h3 id="statAvgResponse">0 hrs</h3>
+                            <p>Avg Volunteer Response</p>
+                            <span class="rs-sub">Time to accept task</span>
+                        </div>
+                    </div>
+                    <div class="report-stat-card purple">
+                        <div class="rs-icon">🙋</div>
+                        <div class="rs-info">
+                            <h3 id="statActiveVolunteers">0</h3>
+                            <p>Engaged Volunteers</p>
+                            <span class="rs-sub">Active this month</span>
+                        </div>
+                    </div>
+                    <div class="report-stat-card teal">
+                        <div class="rs-icon">🕒</div>
+                        <div class="rs-info">
+                            <h3 id="statTotalHours">0</h3>
+                            <p>Community Hours</p>
+                            <span class="rs-sub">Volunteered time</span>
+                        </div>
+                    </div>
+                    <div class="report-stat-card red">
+                        <div class="rs-icon">📚</div>
+                        <div class="rs-info">
+                            <h3 id="statResourceViews">0</h3>
+                            <p>Resources Accessed</p>
+                            <span class="rs-sub">Training impact</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="reports-visuals">
+                    <!-- CHART A: Monthly Activity -->
+                    <div class="visual-block">
+                        <h3 class="block-title">📊 Monthly Task Activity</h3>
+                        <div class="activity-chart" id="activityChart">
+                            <!-- Injected bars -->
+                        </div>
+                        <div class="chart-labels" id="activityLabels"></div>
+                    </div>
+
+                    <!-- CHART B: Availability Breakdown -->
+                    <div class="visual-block">
+                        <h3 class="block-title">🙋 Volunteer Availability Distribution</h3>
+                        <div class="stacked-bar-chart">
+                            <div class="stacked-segment green" id="segAvailable" style="width: 0%"></div>
+                            <div class="stacked-segment orange" id="segBusy" style="width: 0%"></div>
+                            <div class="stacked-segment red" id="segOnLeave" style="width: 0%"></div>
+                        </div>
+                        <div class="chart-legend">
+                            <span class="leg-item"><span class="dot green"></span> Available</span>
+                            <span class="leg-item"><span class="dot orange"></span> Busy</span>
+                            <span class="leg-item"><span class="dot red"></span> On Leave</span>
+                        </div>
+                    </div>
+
+                    <!-- CHART C: Tasks by Priority -->
+                    <div class="visual-block">
+                        <h3 class="block-title">🚩 Tasks by Priority Breakdown</h3>
+                        <div class="prio-bar-chart" id="prioBarChart">
+                            <!-- Horizontal bars -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOP PERFORMERS TABLE -->
+                <section class="reports-table-block">
+                    <h3 class="block-title">🏆 Top Performing Volunteers</h3>
+                    <table class="reports-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Volunteer</th>
+                                <th>Location</th>
+                                <th>Tasks Done</th>
+                                <th>People Helped</th>
+                                <th>Hours</th>
+                                <th>Match Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topVolunteersBody">
+                            <!-- Rows -->
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- COMMUNITY IMPACT SUMMARY -->
+                <section class="impact-cards">
+                    <div class="impact-card">
+                        <h4>Top Need Categories</h4>
+                        <ul id="topNeedsList"></ul>
+                    </div>
+                    <div class="impact-card">
+                        <h4>Most Active Areas</h4>
+                        <ul id="topAreasList"></ul>
+                    </div>
+                    <div class="impact-card">
+                        <h4>Skill Gap Analysis</h4>
+                        <p id="skillGapText">Analyzing volunteer skills vs community needs...</p>
+                    </div>
+                    <div class="impact-card">
+                        <h4>Month-over-Month Growth</h4>
+                        <div id="growthIndicator">--</div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/pages/ngo-reports.js"></script>
+</body>
+</html>

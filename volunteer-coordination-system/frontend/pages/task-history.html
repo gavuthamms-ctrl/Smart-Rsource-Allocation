@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Task History | Smart Resource Allocation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/pages/task-history.css">
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span style="font-size: 24px;">🤝</span>
+            <h2>SmartResource</h2>
+        </div>
+        
+        <ul class="nav-links">
+            <!-- Content injected by sidebar.js -->
+        </ul>
+
+        <div class="sidebar-footer">
+            <div id="sidebarMatchBadge" class="match-badge">0% Match</div>
+            <div class="user-info-mini">
+                <div class="avatar-circle" id="sidebarAvatar">?</div>
+                <div class="user-details">
+                    <h4 id="sidebarName">Volunteer Name</h4>
+                    <span>Volunteer</span>
+                </div>
+                <button onclick="handleLogout()" class="btn-logout-sidebar" title="Logout">🚪</button>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar">
+            <div class="navbar-left">
+                <button class="hamburger-btn" id="hamburgerBtn" style="background:none; border:none; font-size:24px; cursor:pointer;">☰</button>
+            </div>
+            <div class="navbar-center">
+                <h3>My Task History</h3>
+            </div>
+            <div class="navbar-right">
+                <div class="nav-icon" title="Notifications">
+                    🔔
+                    <span class="notification-badge" id="notifBadge">3</span>
+                </div>
+                <div class="avatar-circle" id="navAvatar">?</div>
+                <div class="user-details" style="text-align: right;">
+                    <h4 id="navName" style="font-size:14px; margin-bottom:0;">Volunteer</h4>
+                    <span style="font-size:11px; opacity:0.7;">Online</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header-row">
+                <div>
+                    <h2>📋 My Task History</h2>
+                    <p id="pageSubtitle">Complete record of all your volunteer work</p>
+                    <div style="font-size: 12px; color: #999; margin-top: 4px;">
+                        Home > My Task History
+                    </div>
+                </div>
+                <button onclick="exportTaskHistory()" class="btn-export">
+                    ⬇️ Export History (CSV)
+                </button>
+            </div>
+
+            <!-- LIVE STATUS BANNER -->
+            <div class="live-status-banner">
+                <div class="banner-left">
+                    <div style="display:flex; align-items:center;">
+                        <span class="live-dot"></span>
+                        <span>Live Tracking Active</span>
+                    </div>
+                    <p>Your task data updates in real time</p>
+                </div>
+                <div class="banner-center" id="activeTaskBanner">
+                    <!-- Dynamic -->
+                    <h4 id="trackingLabel">✅ No active tasks right now</h4>
+                    <p id="trackingSub">Accept a matched task to get started</p>
+                </div>
+                <div class="banner-right">
+                    <div class="live-clock" id="liveClock">00:00:00</div>
+                    <div class="auto-refresh-row">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoRefreshToggle" checked onchange="toggleAutoRefresh()"/>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Auto-refresh (30s)</span>
+                    </div>
+                    <p id="lastSynced">Last synced: just now</p>
+                </div>
+            </div>
+
+            <!-- IMPACT CARDS -->
+            <div class="impact-cards-row">
+                <div class="impact-card blue-card">
+                    <div class="card-icon blue-bg">📋</div>
+                    <div class="card-body">
+                        <span class="count-number" id="statAccepted">0</span>
+                        <span class="card-label">Total Accepted</span>
+                        <span class="card-sub">All time</span>
+                        <span class="trend-text green" id="trendAccepted">+1 this week</span>
+                    </div>
+                </div>
+                <div class="impact-card green-card">
+                    <div class="card-icon green-bg">✅</div>
+                    <div class="card-body">
+                        <span class="count-number" id="statCompleted">0</span>
+                        <span class="card-label">Completed</span>
+                        <span class="card-sub">Successfully done</span>
+                        <span class="trend-text" id="completionRateLabel">0% rate</span>
+                    </div>
+                </div>
+                <div class="impact-card orange-card">
+                    <div class="card-icon orange-bg">⚡</div>
+                    <div class="card-body">
+                        <span class="count-number" id="statInProgress">0</span>
+                        <span class="card-label">In Progress</span>
+                        <span class="card-sub">Currently active</span>
+                        <span class="trend-text" id="inProgressStatus">✅ All clear</span>
+                    </div>
+                </div>
+                <div class="impact-card red-card">
+                    <div class="card-icon red-bg">👥</div>
+                    <div class="card-body">
+                        <span class="count-number" id="statPeople">0</span>
+                        <span class="card-label">People Helped</span>
+                        <span class="card-sub">Lives impacted</span>
+                        <span class="trend-text green">+12 this month</span>
+                    </div>
+                </div>
+                <div class="impact-card purple-card">
+                    <div class="card-icon purple-bg">⏱️</div>
+                    <div class="card-body">
+                        <span class="count-number" id="statHours">0</span>
+                        <span class="card-label">Hours Given</span>
+                        <span class="card-sub">Total volunteered</span>
+                        <span class="trend-text gray" id="avgHoursPerTask">0 hrs avg</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FILTER BAR -->
+            <div class="filter-bar">
+                <div class="search-input-wrap">
+                    <span>🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search tasks by title, location or NGO..."/>
+                    <button id="clearSearch" style="background:none; border:none; cursor:pointer; color:#999;">✕</button>
+                </div>
+                <select id="statusFilter" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="In Progress">⚡ In Progress</option>
+                    <option value="To Do">📌 To Do</option>
+                    <option value="Pending Review">⏳ Pending Review</option>
+                    <option value="Completed">✅ Completed</option>
+                    <option value="Cancelled">❌ Cancelled</option>
+                </select>
+                <select id="priorityFilter" class="filter-select">
+                    <option value="">All Priorities</option>
+                    <option value="Critical">🔴 Critical</option>
+                    <option value="High">🟠 High</option>
+                    <option value="Medium">🔵 Medium</option>
+                    <option value="Low">⚪ Low</option>
+                </select>
+                <select id="dateFilter" class="filter-select">
+                    <option value="all">All Time</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="3months">Last 3 Months</option>
+                    <option value="year">This Year</option>
+                </select>
+                <select id="sortFilter" class="filter-select">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="priority">Priority</option>
+                    <option value="status">Status</option>
+                    <option value="completed">Completion Date</option>
+                </select>
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" id="timelineBtn" onclick="switchView('timeline')">📅</button>
+                    <button class="view-toggle-btn" id="tableBtn" onclick="switchView('table')">☰</button>
+                    <button class="view-toggle-btn" id="statsBtn" onclick="switchView('stats')">📊</button>
+                </div>
+                <button class="btn-clear-filters" onclick="clearAllFilters()">Clear Filters</button>
+            </div>
+
+            <p class="result-count" id="resultCount">Showing 0 of 0 tasks</p>
+
+            <!-- TWO COLUMN LAYOUT -->
+            <div class="two-column-layout">
+
+                <!-- LEFT: TASK HISTORY MAIN CONTENT -->
+                <div class="left-column">
+
+                    <!-- TIMELINE VIEW -->
+                    <div id="timelineView">
+                        <div class="timeline-container" id="timelineContainer">
+                            <!-- JS Inject -->
+                            <div style="text-align:center; padding:40px; color:#999;">Loading...</div>
+                        </div>
+                    </div>
+
+                    <!-- TABLE VIEW -->
+                    <div id="tableView" style="display:none">
+                        <div class="table-container">
+                            <table class="history-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Task Title</th>
+                                        <th>NGO</th>
+                                        <th>Location</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Accepted On</th>
+                                        <th>Completed On</th>
+                                        <th>Helped</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- STATS VIEW -->
+                    <div id="statsView" style="display:none">
+                        <div class="stats-view-container" id="statsViewContent">
+                            <!-- JS Inject -->
+                        </div>
+                    </div>
+
+                    <!-- EMPTY STATE -->
+                    <div id="emptyState" style="display:none; text-align:center; padding:80px 40px; background:white; border-radius:14px; box-shadow:var(--shadow);">
+                        <div style="font-size: 64px; margin-bottom: 24px;">📋</div>
+                        <h3 style="font-size: 24px; margin-bottom: 12px;">No Task History Yet</h3>
+                        <p style="color:var(--gray-mid); margin-bottom: 32px;">You haven't accepted any tasks yet. Start by browsing tasks matched to your skills!</p>
+                        <button onclick="window.location.href='matched-tasks.html'" class="btn btn-primary" style="padding:12px 30px; font-size:16px;">🎯 Find Matched Tasks</button>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT PANEL -->
+                <div class="right-panel">
+
+                    <!-- ACTIVITY FEED -->
+                    <div class="panel-card activity-feed-card">
+                        <div class="panel-header">
+                            <h4><span class="live-dot" style="margin-right:8px; animation: pulse 1s infinite;"></span> Live Activity</h4>
+                            <span id="activityLastUpdated" class="last-updated">Updating...</span>
+                        </div>
+                        <p class="panel-subtext">Real-time updates on your tasks</p>
+                        <div id="activityFeed">
+                            <!-- JS Inject -->
+                        </div>
+                    </div>
+
+                    <!-- PROGRESS TRACKER -->
+                    <div class="panel-card task-tracker-card">
+                        <h4>⚡ Current Task Progress</h4>
+                        <div id="taskTrackerContent" style="margin-top:20px;">
+                            <!-- JS Inject -->
+                        </div>
+                    </div>
+
+                    <!-- SKILL BREAKDOWN -->
+                    <div class="panel-card">
+                        <h4>🔧 Skills Used in Tasks</h4>
+                        <p class="panel-subtext">Based on your task history</p>
+                        <div id="skillBreakdownContent">
+                            <!-- JS Inject -->
+                        </div>
+                    </div>
+
+                    <!-- ACHIEVEMENTS -->
+                    <div class="panel-card">
+                        <h4>🏆 Your Achievements</h4>
+                        <div class="badge-grid" id="achievementBadges">
+                            <!-- JS Inject -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- TASK DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeTaskDrawer()"></div>
+<div class="task-drawer" id="taskDrawer">
+    <div class="drawer-header">
+        <div id="drawerHeaderContent"></div>
+        <button onclick="closeTaskDrawer()" style="background:none; border:none; font-size:24px; cursor:pointer;">✕</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-footer" id="drawerFooter"></div>
+</div>
+
+<!-- FIELD REPORT MODAL -->
+<div class="modal-overlay" id="fieldReportModal">
+    <div class="modal-box">
+        <div class="modal-header" style="border-bottom: 1px solid #eee; margin-bottom: 20px; padding-bottom: 20px;">
+            <h3 id="reportModalTitle">📝 Submit Field Report</h3>
+        </div>
+        <div class="modal-body">
+            <div id="reportTaskInfo" style="background:#f0f4ff; padding:15px; border-radius:10px; margin-bottom:20px;"></div>
+            
+            <div class="form-group">
+                <label>Describe what you accomplished: *</label>
+                <textarea id="reportNotes" rows="5" placeholder="Describe the work you did, what was accomplished..."></textarea>
+                <span id="charCount" style="font-size:11px; color:#999; float:right;">0/500</span>
+            </div>
+
+            <div style="display:flex; gap:16px;">
+                <div class="form-group" style="flex:1;">
+                    <label>People helped: *</label>
+                    <input type="number" id="reportPeople" min="0" placeholder="e.g. 12"/>
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Hours spent: *</label>
+                    <input type="number" id="reportHours" min="0.5" step="0.5" placeholder="e.g. 3.5"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Overall outcome: *</label>
+                <div class="outcome-pills" id="outcomePills">
+                    <label class="outcome-pill"><input type="radio" name="outcome" value="Fully Completed" checked/> ✅ Fully Completed</label>
+                    <label class="outcome-pill"><input type="radio" name="outcome" value="Partially Completed"/> ⚠️ Partially Completed</label>
+                    <label class="outcome-pill"><input type="radio" name="outcome" value="Could Not Complete"/> ❌ Could Not Complete</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Add a photo (optional):</label>
+                <div style="border: 2px dashed #ddd; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer;" onclick="document.getElementById('reportPhoto').click()">
+                    📷 Click to upload photo
+                    <input type="file" id="reportPhoto" accept="image/*" style="display:none" onchange="previewPhoto(this)"/>
+                </div>
+                <img id="photoPreview" style="display:none; width:100%; margin-top:10px; border-radius:8px;"/>
+            </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #eee; margin-top: 20px; padding-top: 20px; display:flex; justify-content:flex-end; gap:12px;">
+            <button class="btn btn-outline" onclick="closeModal('fieldReportModal')">Cancel</button>
+            <button class="btn btn-green" id="submitReportBtn" onclick="submitFieldReport()">Submit Report & Mark Complete</button>
+        </div>
+    </div>
+</div>
+
+<!-- CERTIFICATE MODAL -->
+<div class="modal-overlay" id="certificateModal">
+    <div class="modal-box" style="max-width:700px; padding:0;">
+        <div class="certificate-box" id="certificateContent">
+            <div class="certificate-watermark">🤝</div>
+            <div class="certificate-content" style="padding: 60px; text-align: center; border: 15px double gold; margin: 10px;">
+                <div style="font-size: 60px; margin-bottom: 20px;">🏆</div>
+                <h1 style="font-family: serif; color: gold; font-size: 36px; margin-bottom: 10px;">Certificate of Appreciation</h1>
+                <p style="font-style: italic; font-size: 18px; color: #666; margin-bottom: 30px;">This certifies that</p>
+                <h2 id="certName" style="font-size: 32px; color: #1a237e; margin-bottom: 10px;">Volunteer Name</h2>
+                <div style="width: 200px; height: 1px; background: #ddd; margin: 0 auto 20px;"></div>
+                <p style="font-size: 16px; margin-bottom: 5px;">has successfully completed</p>
+                <h3 id="certTask" style="font-size: 22px; color: #333; margin-bottom: 5px;">Task Title</h3>
+                <p style="font-size: 16px; margin-bottom: 20px;">as a volunteer for <span id="certNGO" style="font-weight:700;">NGO Name</span></p>
+                
+                <div style="display:flex; justify-content:center; gap:40px; margin-top:40px;">
+                    <div>
+                        <p style="font-size: 12px; color: #999;">Date Issued</p>
+                        <p id="certDate" style="font-weight:600;">12 Apr 2026</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 12px; color: #999;">Impact Created</p>
+                        <p id="certImpact" style="font-weight:600;">12 People Helped</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding: 20px; display:flex; justify-content:center; gap:16px; background:#f8f9ff; border-bottom-left-radius:16px; border-bottom-right-radius:16px;">
+            <button class="btn btn-outline" onclick="closeModal('certificateModal')">Close</button>
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Print Certificate</button>
+            <button class="btn btn-orange" onclick="downloadCertificate()">⬇️ Download PDF</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOASTS -->
+<div id="toast-container"></div>
+
+<!-- Sidebar Component -->
+<script src="../js/components/sidebar.js"></script>
+<!-- JS -->
+<script src="../js/pages/task-history.js"></script>
+</body>
+</html>

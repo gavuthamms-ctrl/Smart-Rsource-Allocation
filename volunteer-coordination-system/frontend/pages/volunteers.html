@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Dashboard | Smart Resource Allocation</title>
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/pages/volunteers.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- SIDEBAR OVERLAY (Mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span>🤝</span>
+                    <span class="logo-text">SmartResource</span>
+                </div>
+                <button class="mobile-close" onclick="toggleSidebar()">✕</button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <!-- Content injected by sidebar.js -->
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar" id="sidebarAvatar">?</div>
+                    <div class="user-meta">
+                        <span class="name" id="sidebarName">Loading...</span>
+                        <span class="role">Volunteer</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN WRAPPER -->
+        <div class="main-wrapper">
+            <!-- TOP NAVBAR -->
+            <header class="top-navbar">
+                <div class="navbar-left">
+                    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                    <h1 class="page-title">Volunteer Dashboard</h1>
+                </div>
+                <div class="navbar-right">
+                    <div class="notification-wrap">
+                        <span class="icon-bell">🔔</span>
+                        <span class="badge">2</span>
+                    </div>
+                    <div class="nav-user">
+                        <span class="user-name" id="navUserName">...</span>
+                        <div class="nav-avatar" id="navAvatar">?</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <main class="page-content">
+                <!-- SECTION 1: HERO -->
+                <section class="hero-section" id="heroSection">
+                    <div class="hero-left">
+                        <h2 id="heroGreeting">Welcome back! 👋</h2>
+                        <p id="heroSubtitle">Identifying matches for your skills...</p>
+                        <div class="availability-wrap">
+                            <span class="avail-label">Your Status:</span>
+                            <div class="avail-toggle-container">
+                                <div class="avail-toggle" id="availToggle" onclick="toggleAvailability()">
+                                    <div class="toggle-pill"></div>
+                                    <span class="toggle-option available">🟢 Available</span>
+                                    <span class="toggle-option busy">🔴 Busy</span>
+                                </div>
+                                <div class="on-leave-badge" id="onLeaveBadge" style="display:none">
+                                    <span>🟠 On Leave</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-right">
+                        <div class="stat-card">
+                            <span class="stat-icon">✅</span>
+                            <span class="stat-number" id="statTasks">0</span>
+                            <span class="stat-label">Tasks Completed</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">👥</span>
+                            <span class="stat-number" id="statPeople">0</span>
+                            <span class="stat-label">People Helped</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">⏱️</span>
+                            <span class="stat-number" id="statHours">0 hrs</span>
+                            <span class="stat-label">Hours Volunteered</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: RECOMMENDATIONS -->
+                <section class="content-section">
+                    <div class="section-header-row">
+                        <div>
+                            <h3 class="section-heading">🎯 Urgent Needs Near You</h3>
+                            <p class="section-subheading">Matched to your skills and location by our smart engine</p>
+                        </div>
+                        <span class="match-count" id="matchCount"></span>
+                    </div>
+                    <div class="recommendations-grid" id="recommendationsGrid">
+                        <!-- Recommendation cards injected here -->
+                    </div>
+                </section>
+
+                <!-- SECTION 3: ACTIVE ASSIGNMENTS -->
+                <section class="content-section">
+                    <div class="section-header-row">
+                        <h3 class="section-heading">📋 My Active Assignments</h3>
+                        <div class="view-toggle">
+                            <button class="view-toggle-btn active" id="kanbanBtn" onclick="setupViewToggle('kanban')">📊
+                                Kanban</button>
+                            <button class="view-toggle-btn" id="listBtn" onclick="setupViewToggle('list')">☰
+                                List</button>
+                        </div>
+                    </div>
+
+                    <!-- KANBAN VIEW -->
+                    <div id="kanbanView" class="view-container">
+                        <div class="kanban-board">
+                            <div class="kanban-column">
+                                <div class="kanban-header todo-header">
+                                    📌 To Do
+                                    <span class="col-count" id="todoCount">0</span>
+                                </div>
+                                <div class="kanban-cards" id="todoCards"></div>
+                            </div>
+                            <div class="kanban-column">
+                                <div class="kanban-header inprogress-header">
+                                    ⚡ In Progress
+                                    <span class="col-count" id="inprogressCount">0</span>
+                                </div>
+                                <div class="kanban-cards" id="inprogressCards"></div>
+                            </div>
+                            <div class="kanban-column">
+                                <div class="kanban-header review-header">
+                                    ⏳ Pending Review
+                                    <span class="col-count" id="reviewCount">0</span>
+                                </div>
+                                <div class="kanban-cards" id="reviewCards"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LIST VIEW -->
+                    <div id="listView" class="view-container" style="display:none">
+                        <div class="table-card">
+                            <table class="list-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Task</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Due Date</th>
+                                        <th>NGO</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="taskListBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="activeTasksEmpty" class="empty-state" style="display:none">
+                        <div class="empty-icon">🎯</div>
+                        <h4>No active assignments yet.</h4>
+                        <p>Accept a recommended task above to get started!</p>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: HEATMAP -->
+                <section class="content-section">
+                    <h3 class="section-heading">🗺️ Community Needs Near You</h3>
+                    <p class="section-subheading">Live map showing where help is needed most</p>
+                    <div class="map-wrapper">
+                        <div id="communityMap"></div>
+                        <div class="map-legend">
+                            <div class="legend-item"><span class="dot crit"></span> Critical Need</div>
+                            <div class="legend-item"><span class="dot high"></span> High Priority</div>
+                            <div class="legend-item"><span class="dot med"></span> Medium Priority</div>
+                            <div class="legend-item"><span class="dot pulse"></span> You Are Here</div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- FIELD REPORT MODAL -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="reportModalTitle">Submit Field Report</h3>
+                <button class="close-modal-btn" onclick="closeModal('reportModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Describe what you did: *</label>
+                    <textarea id="reportNotes" rows="6"
+                        placeholder="Write your observations, work done, number of people helped..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>People helped in this task:</label>
+                    <input type="number" id="reportPeople" min="0" placeholder="e.g. 12" />
+                </div>
+                <div class="field-upload-area" id="uploadArea" onclick="document.getElementById('reportPhoto').click()">
+                    <span>📷 Click to upload a photo (optional)</span>
+                    <input type="file" id="reportPhoto" accept="image/*" style="display:none"
+                        onchange="previewPhoto(this)" />
+                    <img id="photoPreview" style="display:none; max-width:100%; margin-top:10px; border-radius:8px" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('reportModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitFieldReport()">Submit Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TASK DETAIL MODAL -->
+    <div class="modal-overlay" id="taskDetailModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="detailModalTitle">Task Details</h3>
+                <button class="close-modal-btn" onclick="closeModal('taskDetailModal')">✕</button>
+            </div>
+            <div class="modal-body" id="taskDetailBody">
+                <!-- Details injected here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('taskDetailModal')">Close</button>
+                <button class="btn btn-success" id="detailAcceptBtn">✅ Accept Task</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Sidebar Component -->
+    <script src="../js/components/sidebar.js"></script>
+    <script src="../js/pages/volunteers.js"></script>
+</body>
+
+</html>

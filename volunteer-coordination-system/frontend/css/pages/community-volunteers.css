@@ -1,0 +1,110 @@
+/* Custom styles for Find Volunteers page */
+:root {
+    --community-primary: #1b5e20;
+    --community-light: #43a047;
+    --text-dark: #212121;
+    --text-gray: #757575;
+    --white: #ffffff;
+}
+
+.volunteers-container {
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Search Strip */
+.search-strip {
+    background: white; padding: 24px; border-radius: 16px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 32px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+
+.search-strip h2 { font-size: 20px; font-weight: 700; color: var(--text-dark); }
+
+.search-input-wrapper {
+    width: 100%; max-width: 600px; position: relative;
+}
+
+.search-input-wrapper input {
+    width: 100%; padding: 14px 20px 14px 44px; border: 1.5px solid #eee;
+    border-radius: 30px; font-size: 15px; outline: none; transition: border-color 0.3s;
+}
+
+.search-input-wrapper input:focus { border-color: var(--community-light); }
+.search-input-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #999; }
+
+.quick-filters { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.filter-pill { 
+    padding: 6px 16px; border-radius: 20px; border: 1.5px solid #eee; 
+    font-size: 12px; cursor: pointer; background: white; transition: all 0.2s;
+}
+.filter-pill:hover { background: #f5f5f5; }
+.filter-pill.active { background: var(--community-primary); color: white; border-color: var(--community-primary); }
+
+/* Filter Bar */
+.filter-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; padding: 0 8px;
+}
+
+.filter-group { display: flex; gap: 20px; align-items: center; font-size: 14px; }
+.filter-option { cursor: pointer; color: #777; font-weight: 500; }
+.filter-option.active { color: var(--community-primary); font-weight: 700; }
+
+/* Stats Row */
+.stats-row { 
+    display: flex; gap: 16px; margin-bottom: 32px; 
+}
+.stat-item {
+    padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600;
+}
+.stat-item.green { background: #e8f5e9; color: #2e7d32; }
+.stat-item.blue { background: #e3f2fd; color: #1976d2; }
+
+/* Volunteers Grid */
+.vol-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.v-card {
+    background: white; border-radius: 20px; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.3s;
+    border-top: 5px solid #ddd; padding: 24px; text-align: center;
+}
+.v-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+.v-card.matched { border-top-color: var(--community-light); }
+
+.v-avatar-box { margin-bottom: 16px; position: relative; }
+.v-badge-avail { 
+    position: absolute; top: 0; right: 0; padding: 4px 10px; 
+    border-radius: 12px; font-size: 10px; font-weight: 700;
+}
+
+.v-avatar-circle {
+    width: 64px; height: 64px; border-radius: 50%; background: #eee;
+    margin: 0 auto; display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700; color: white;
+}
+
+.v-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text-dark); }
+.v-code { font-size: 11px; color: #999; margin-bottom: 16px; display: block; }
+
+.v-impact-stats {
+    display: flex; justify-content: center; gap: 20px; border-top: 1px solid #f5f5f5;
+    padding-top: 16px; margin-top: 20px;
+}
+.impact-item { text-align: center; }
+.impact-val { font-size: 14px; font-weight: 700; display: block; }
+.impact-lab { font-size: 10px; color: #999; }
+
+.match-banner {
+    background: #f1f8e9; color: #2e7d32; padding: 8px; font-size: 11px;
+    font-weight: 700; border-radius: 8px; margin: 16px 0;
+}
+
+.v-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.btn-v-chat { background: var(--community-primary); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.btn-v-req { background: white; border: 1.5px solid var(--community-primary); color: var(--community-primary); padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; }

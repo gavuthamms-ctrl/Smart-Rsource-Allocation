@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Dashboard | Smart Resource Allocation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/pages/ngo-dashboard.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- NGO SIDEBAR (Fixed Left) -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="logo">
+                    <span class="logo-icon">🤝</span>
+                    <span class="logo-text">SmartResource</span>
+                </div>
+                <div class="ngo-badge" id="ngoBadge">
+                    <span class="ngo-icon">🏢</span>
+                    <span class="ngo-name-text">Loading Foundation...</span>
+                </div>
+            </div>
+
+            <nav class="nav-links">
+                <a href="ngo-dashboard.html" class="nav-link active">
+                    <span class="icon">🏠</span> Dashboard
+                </a>
+                <a href="ngo-volunteers.html" class="nav-link">
+                    <span class="icon">🙋</span> Volunteers
+                </a>
+                <a href="ngo-tasks.html" class="nav-link">
+                    <span class="icon">✅</span> Task Management
+                </a>
+                <a href="ngo-community.html" class="nav-link">
+                    <span class="icon">🌍</span> Community Needs
+                </a>
+                <a href="ngo-reports.html" class="nav-link">
+                    <span class="icon">📊</span> Reports & Analytics
+                </a>
+                <a href="ngo-resources.html" class="nav-link">
+                    <span class="icon">📚</span> NGO Resources
+                </a>
+                <a href="ngo-chatbox.html" class="nav-link">
+                    <span class="icon">💬</span> Community Chatbox
+                </a>
+                <a href="ngo-profile.html" class="nav-link">
+                    <span class="icon">⚙️</span> NGO Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile-row" onclick="location.href='ngo-profile.html'">
+                    <div class="sidebar-avatar" id="sidebarAvatar">G</div>
+                    <div class="sidebar-user-details">
+                        <span class="user-name" id="sidebarUserName">Gavutham</span>
+                        <span class="user-role">🏢 NGO Admin</span>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            <!-- TOP NAVBAR -->
+            <header class="top-navbar">
+                <div class="nav-left">
+                    <button class="hamburger-btn">☰</button>
+                    <h1 class="page-title">NGO Dashboard Overview</h1>
+                </div>
+                <div class="nav-right">
+                    <div class="notification-bell">
+                        <span class="bell-icon">🔔</span>
+                        <span class="badge" id="urgentNeedsCount">0</span>
+                    </div>
+                    <button class="quick-alert-btn" onclick="openQuickAlertModal()">
+                        <span class="icon">🆘</span> Post Urgent Alert
+                    </button>
+                    <div class="nav-user-profile" onclick="location.href='ngo-profile.html'" style="cursor:pointer">
+                        <div class="avatar-small" id="navAvatar">G</div>
+                        <div class="nav-user-text">
+                            <span class="name" id="navUserName">Gavutham</span>
+                            <span class="role">NGO Admin</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- HERO WELCOME BANNER -->
+                <section class="hero-banner">
+                    <div class="hero-left">
+                        <h2 id="welcomeText">Good Morning, Gavutham Foundation! 🏢</h2>
+                        <p class="hero-subtext">Managing volunteer coordination across Coimbatore</p>
+                        <p class="hero-date" id="currentDate">Saturday, April 12, 2026</p>
+                    </div>
+                    <div class="hero-right">
+                        <div class="hero-stat-box">
+                            <span class="stat-value" id="heroActiveTasks">--</span>
+                            <span class="stat-label">📋 Active Tasks</span>
+                        </div>
+                        <div class="hero-stat-box">
+                            <span class="stat-value" id="heroActiveVolunteers">--</span>
+                            <span class="stat-label">🙋 Active Volunteers</span>
+                        </div>
+                        <div class="hero-stat-box">
+                            <span class="stat-value" id="heroPendingNeeds">--</span>
+                            <span class="stat-label">🆘 Pending Needs</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- MAIN STATS ROW -->
+                <section class="stats-row">
+                    <div class="stat-card blue">
+                        <div class="stat-card-top">
+                            <div class="stat-icon-bg">🙋</div>
+                            <div class="stat-trend" id="volTrend">+0 this week</div>
+                        </div>
+                        <div class="stat-body">
+                            <h3 id="statTotalVolunteers">--</h3>
+                            <p class="stat-label">Total Volunteers</p>
+                            <p class="stat-subtext">Registered on platform</p>
+                        </div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-card-top">
+                            <div class="stat-icon-bg">✅</div>
+                        </div>
+                        <div class="stat-body">
+                            <h3 id="statActiveTasks">--</h3>
+                            <p class="stat-label">Active Tasks</p>
+                            <p class="stat-subtext">Currently running</p>
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-card-top">
+                            <div class="stat-icon-bg">🏆</div>
+                        </div>
+                        <div class="stat-body">
+                            <h3 id="statCompletedTasks">--</h3>
+                            <p class="stat-label">Completed</p>
+                            <p class="stat-subtext">Successfully done</p>
+                        </div>
+                    </div>
+                    <div class="stat-card red" id="criticalNeedsCard">
+                        <div class="stat-card-top">
+                            <div class="stat-icon-bg">🚨</div>
+                        </div>
+                        <div class="stat-body">
+                            <h3 id="statCriticalNeeds">--</h3>
+                            <p class="stat-label">Critical Needs</p>
+                            <p class="stat-subtext">Need immediate action</p>
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-card-top">
+                            <div class="stat-icon-bg">👥</div>
+                        </div>
+                        <div class="stat-body">
+                            <h3 id="statPeopleHelped">--</h3>
+                            <p class="stat-label">People Helped</p>
+                            <p class="stat-subtext">Total impact</p>
+                        </div>
+                    </div>
+                    <div class="stat-card teal">
+                        <div class="stat-card-top">
+                            <div class="stat-icon-bg">📝</div>
+                        </div>
+                        <div class="stat-body">
+                            <h3 id="statPendingReports">--</h3>
+                            <p class="stat-label">Pending Reports</p>
+                            <p class="stat-subtext">Awaiting NGO approval</p>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="dashboard-grid">
+                    <!-- LEFT COLUMN -->
+                    <div class="grid-left">
+                        <div class="dashboard-block" id="taskStatusBlock">
+                            <h3 class="block-title">📊 Task Status Overview</h3>
+                            <div class="bar-chart" id="taskStatusBarChart">
+                                <!-- Bars generic placeholder -->
+                                <div class="bar-row">
+                                    <span class="label">Open Tasks</span>
+                                    <div class="bar-container"><div class="bar blue" style="width: 0%" id="barOpen"></div></div>
+                                    <span class="count" id="countOpen">0</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="label">Assigned</span>
+                                    <div class="bar-container"><div class="bar orange" style="width: 0%" id="barAssigned"></div></div>
+                                    <span class="count" id="countAssigned">0</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="label">In Progress</span>
+                                    <div class="bar-container"><div class="bar yellow" style="width: 0%" id="barInProgress"></div></div>
+                                    <span class="count" id="countInProgress">0</span>
+                                </div>
+                                <div class="bar-row">
+                                    <span class="label">Completed</span>
+                                    <div class="bar-container"><div class="bar green" style="width: 0%" id="barCompleted"></div></div>
+                                    <span class="count" id="countCompleted">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-block" id="volAvailabilityBlock">
+                            <h3 class="block-title">🙋 Volunteer Availability Breakdown</h3>
+                            <div class="availability-circles">
+                                <div class="circle-item">
+                                    <div class="conic-circle green" id="circleAvailable"></div>
+                                    <p class="circle-label" id="labelAvailable">-- Available</p>
+                                </div>
+                                <div class="circle-item">
+                                    <div class="conic-circle orange" id="circleBusy"></div>
+                                    <p class="circle-label" id="labelBusy">-- Busy</p>
+                                </div>
+                                <div class="circle-item">
+                                    <div class="conic-circle red" id="circleOnLeave"></div>
+                                    <p class="circle-label" id="labelOnLeave">-- On Leave</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-block">
+                            <div class="block-header">
+                                <h3 class="block-title">📋 Recent Task Activity</h3>
+                                <a href="ngo-tasks.html" class="view-all">View All →</a>
+                            </div>
+                            <div class="task-activity-list" id="recentActivityList">
+                                <!-- Activity rows will be injected here -->
+                            </div>
+                        </div>
+
+                        <div class="dashboard-block">
+                            <h3 class="block-title">🗺️ Volunteer Location Map</h3>
+                            <div id="volunteerMap" style="height: 280px; border-radius: 14px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="grid-right">
+                        <div class="quick-actions-block">
+                            <h3 class="block-title">⚡ Quick Actions</h3>
+                            <div class="action-buttons">
+                                <button class="action-btn blue" onclick="location.href='ngo-tasks.html?action=create'">
+                                    <span class="icon">➕</span> Create New Task
+                                </button>
+                                <button class="action-btn orange" onclick="openAnnouncementModal()">
+                                    <span class="icon">📢</span> Post Announcement
+                                </button>
+                                <button class="action-btn red" onclick="openQuickAlertModal()">
+                                    <span class="icon">🚨</span> Post Urgent Alert
+                                </button>
+                                <button class="action-btn green" onclick="location.href='ngo-reports.html'">
+                                    <span class="icon">📊</span> Generate Report
+                                </button>
+                                <button class="action-btn purple" onclick="location.href='ngo-resources.html?action=upload'">
+                                    <span class="icon">📚</span> Upload Resource
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-block scrollable">
+                            <div class="block-header">
+                                <h3 class="block-title">🆘 Critical Community Needs</h3>
+                                <a href="ngo-community.html" class="view-all">View All</a>
+                            </div>
+                            <div class="critical-needs-list" id="criticalNeedsList">
+                                <!-- Critical focus items -->
+                            </div>
+                        </div>
+
+                        <div class="dashboard-block scrollable">
+                            <h3 class="block-title">🔔 Pending Field Reports</h3>
+                            <div class="pending-reports-list" id="pendingReportsList">
+                                <!-- Report items -->
+                            </div>
+                        </div>
+
+                        <div class="dashboard-block scrollable">
+                            <h3 class="block-title">📈 Recent Activity Feed</h3>
+                            <div class="activity-feed" id="mainActivityFeed">
+                                <!-- Activity feed logs -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Overlays -->
+    <div id="announcementModal" class="dashboard-modal-overlay">
+        <div class="dashboard-modal-box wide">
+            <header class="modal-header orange">
+                <div class="header-left">
+                    <span class="header-icon">📢</span>
+                    <div class="header-text">
+                        <h3>Post Announcement</h3>
+                        <p>Broadcast to all volunteers and community</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeDashboardModal('announcementModal')">&times;</button>
+            </header>
+            <div class="modal-body scrollable">
+                <div class="preview-banner announcement">
+                    <span class="preview-label">📢 ANNOUNCEMENT</span>
+                    <p id="announcementPreview" class="preview-text">Your announcement title will appear here...</p>
+                    <small>Preview of how this looks in chatbox</small>
+                </div>
+                <form id="announcementForm" class="modal-form">
+                    <div class="form-group">
+                        <label>Title * <span class="char-count" id="annTitleCount">0/100</span></label>
+                        <input type="text" id="annTitle" placeholder="e.g. Medical Camp this Saturday!" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Message * <span class="char-count" id="annMsgCount">0/500</span></label>
+                        <textarea id="annMessage" rows="5" placeholder="Write your full announcement here..." minlength="20" maxlength="500" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Who should see this?</label>
+                        <div class="multi-select-pills" id="annAudience">
+                            <label class="pill-checkbox blue selected"><input type="checkbox" value="All Volunteers" checked> 🙋 All Volunteers</label>
+                            <label class="pill-checkbox red"><input type="checkbox" value="Medical Volunteers"> 🏥 Medical</label>
+                            <label class="pill-checkbox orange"><input type="checkbox" value="Electrical Volunteers"> ⚡ Electrical</label>
+                            <label class="pill-checkbox yellow"><input type="checkbox" value="Water Treatment"> 💧 Water</label>
+                            <label class="pill-checkbox green"><input type="checkbox" value="All Community"> 🌍 All Community</label>
+                            <label class="pill-checkbox teal"><input type="checkbox" value="Palladam Area"> 📍 Palladam</label>
+                            <label class="pill-checkbox purple"><input type="checkbox" value="Ukkadam Area"> 📍 Ukkadam</label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Chat Room</label>
+                            <select id="annRoom">
+                                <option value="3">📢 NGO Announcements</option>
+                                <option value="1">🌐 General Community</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <div class="radio-pill-group">
+                                <label class="radio-pill blue"><input type="radio" name="annPrio" value="Normal" checked> Normal</label>
+                                <label class="radio-pill red"><input type="radio" name="annPrio" value="Urgent"> Urgent</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="urgentWarning" class="warning-box" style="display:none;">
+                        ⚠️ This will send push notifications to all selected volunteers
+                    </div>
+                    <div class="toggle-group">
+                        <label class="switch-label">Action Required? <input type="checkbox" id="annActionToggle"></label>
+                        <div id="actionFields" style="display:none; margin-top:10px;">
+                            <input type="text" id="annActionDesc" placeholder="What should volunteers do?">
+                            <input type="date" id="annDeadline" style="margin-top:5px;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <footer class="modal-footer">
+                <span class="footer-info" id="annFooterInfo">Posting to NGO Announcements</span>
+                <div class="modal-btns">
+                    <button class="btn-secondary" onclick="closeDashboardModal('announcementModal')">Cancel</button>
+                    <button class="btn-outline orange" onclick="scrollToPreview('announcementModal')">Preview</button>
+                    <button class="btn-primary orange" id="submitAnnBtn" onclick="submitAnnouncement()">Post Announcement</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Urgent Alert Modal -->
+    <div id="urgentAlertModal" class="dashboard-modal-overlay">
+        <div class="dashboard-modal-box urgent-box">
+            <header class="modal-header red">
+                <div class="header-left">
+                    <span class="header-icon pulse">🚨</span>
+                    <div class="header-text">
+                        <h3>Post Urgent Alert</h3>
+                        <p>Immediate notification to volunteers</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeDashboardModal('urgentAlertModal')">&times;</button>
+            </header>
+            
+            <div class="alert-strip">
+                <strong>🔴 LIVE</strong> — This alert will be sent IMMEDIATELY to all active volunteers
+            </div>
+
+            <div class="modal-body scrollable">
+                <form id="urgentAlertForm" class="urgent-form">
+                    <!-- Urgency Cards Selection -->
+                    <div class="form-group-stacked">
+                        <label>Urgency Level *</label>
+                        <div class="urgency-grid">
+                            <div class="u-card high" onclick="selectUrgency('high')" id="urgencyHigh">
+                                <span class="u-title">HIGH</span>
+                                <span class="u-sub">Need help today</span>
+                                <span class="check-icon">✓</span>
+                            </div>
+                            <div class="u-card critical selected" onclick="selectUrgency('critical')" id="urgencyCritical">
+                                <span class="u-title">CRITICAL</span>
+                                <span class="u-sub">Need help NOW</span>
+                                <span class="check-icon">✓</span>
+                            </div>
+                            <div class="u-card emergency" onclick="selectUrgency('emergency')" id="urgencyEmergency">
+                                <span class="u-title">EMERGENCY</span>
+                                <span class="u-sub">Life threatening</span>
+                                <span class="check-icon">✓</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Description -->
+                    <div class="form-group-stacked">
+                        <label for="urgDescription">What is the emergency? * <span class="char-count" id="urgDescCount">0/300</span></label>
+                        <textarea id="urgDescription" rows="4" maxlength="300" placeholder="Describe the emergency clearly (e.g., flash flood rescue, multi-vehicle incident)..." required></textarea>
+                    </div>
+
+                    <!-- Emergency Location -->
+                    <div class="form-group-stacked">
+                        <label for="urgLocation">Emergency Location *</label>
+                        <input type="text" id="urgLocation" placeholder="Enter specific location (e.g. Palladam Bus Stand Main Gate)" required>
+                        <div class="pill-group-container">
+                            <span class="pills-label">Quick select:</span>
+                            <div class="pill-group" id="locPills">
+                                <button type="button" class="pill" onclick="fillLoc('Palladam')">📍 Palladam</button>
+                                <button type="button" class="pill" onclick="fillLoc('Ukkadam')">📍 Ukkadam</button>
+                                <button type="button" class="pill" onclick="fillLoc('Peelamedu')">📍 Peelamedu</button>
+                                <button type="button" class="pill" onclick="fillLoc('Gandhipuram')">📍 Gandhipuram</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills Wanted -->
+                    <div class="form-group-stacked">
+                        <label>What skills/help is needed?</label>
+                        <div class="pill-group multi-select" id="urgSkills">
+                            <label class="pill-checkbox"><input type="checkbox" value="Doctor"> 🩺 Medical</label>
+                            <label class="pill-checkbox"><input type="checkbox" value="First Aid"> 🩹 First Aid</label>
+                            <label class="pill-checkbox"><input type="checkbox" value="Electrician"> ⚡ Electrical</label>
+                            <label class="pill-checkbox"><input type="checkbox" value="Rescue"> 🛶 Rescue</label>
+                            <label class="pill-checkbox"><input type="checkbox" value="Counsellor"> 🧠 Counsellor</label>
+                            <label class="pill-checkbox"><input type="checkbox" value="Driver"> 🚗 Driver</label>
+                        </div>
+                    </div>
+
+                    <!-- Real-time Matching Preview -->
+                    <div class="matching-preview-box" id="matchingVolunteers">
+                        <label>Matching System Status</label>
+                        <p class="preview-placeholder">Enter location to see matched volunteers nearby...</p>
+                    </div>
+                </form>
+            </div>
+
+            <footer class="modal-footer alert-footer">
+                <div class="footer-left">
+                    <span id="urgMatchCount" class="match-status-text">0 matching volunteers found</span>
+                </div>
+                <div class="modal-btns">
+                    <button class="btn-cancel" onclick="closeDashboardModal('urgentAlertModal')">Cancel</button>
+                    <button class="btn-send-alert" id="submitUrgBtn" onclick="submitUrgentAlert()">Send Alert</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div id="reportModal" class="dashboard-modal-overlay">
+        <div class="dashboard-modal-box report-box">
+            <header class="modal-header green">
+                <div class="header-left">
+                    <span class="header-icon">📊</span>
+                    <div class="header-text">
+                        <h3>Generate Report</h3>
+                        <p>Analyze organization performance</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeDashboardModal('reportModal')">&times;</button>
+            </header>
+            <div class="modal-body">
+                <div id="reportStep1">
+                    <h3 class="step-heading">1. Select Report Type</h3>
+                    <div class="report-type-grid">
+                        <label class="repo-card" id="cardTasks">
+                            <input type="radio" name="reportType" value="tasks" class="hidden-radio">
+                            <div class="card-content">
+                                <span class="card-icon">📋</span>
+                                <h4>Tasks Summary</h4>
+                                <p>Overview of all tasks and completion rates</p>
+                            </div>
+                        </label>
+                        <label class="repo-card" id="cardVolunteers">
+                            <input type="radio" name="reportType" value="volunteers" class="hidden-radio">
+                            <div class="card-content">
+                                <span class="card-icon">👥</span>
+                                <h4>Volunteers Performance</h4>
+                                <p>Detailed stats for each volunteer</p>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="modal-footer-simple">
+                        <button class="btn-continue" onclick="handleReportStep1()">Continue</button>
+                    </div>
+                </div>
+                <div id="reportStep2" style="display:none;">
+                    <h3 class="step-heading">2. Report Period & Options</h3>
+                    <div class="form-group-stacked">
+                        <label>Select Period</label>
+                        <div class="pill-group">
+                            <button type="button" class="pill selected">This Month</button>
+                            <button type="button" class="pill">Last 3 Months</button>
+                            <button type="button" class="pill">This Year</button>
+                        </div>
+                    </div>
+                    <div class="form-group-stacked" style="margin-top:20px;">
+                        <label>Export Format</label>
+                        <div class="pill-group">
+                            <button type="button" class="format-pill selected">📄 CSV File</button>
+                            <button type="button" class="format-pill">🖨️ PDF/Print</button>
+                        </div>
+                    </div>
+                    <div class="modal-btns-row">
+                        <button class="btn-secondary" onclick="nextReportStep(1)">Back</button>
+                        <button class="btn-primary green" id="submitReportBtn" onclick="generateReport()">Generate & Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Resource Modal -->
+    <div id="uploadResourceModal" class="dashboard-modal-overlay">
+        <div class="dashboard-modal-box resource-box">
+            <header class="modal-header blue-branded">
+                <div class="header-left">
+                    <span class="header-icon">📤</span>
+                    <div class="header-text">
+                        <h3>Upload Skill Resource</h3>
+                        <p>Share training materials with volunteers</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeDashboardModal('uploadResourceModal')">&times;</button>
+            </header>
+            
+            <div class="modal-body scrollable">
+                <form id="resourceForm" class="resource-upload-form">
+                    <!-- Standard Metadata -->
+                    <div class="form-group-stacked">
+                        <label for="resTitle">Resource Title *</label>
+                        <input type="text" id="resTitle" placeholder="e.g. Basic First Aid Guide" required>
+                    </div>
+
+                    <div class="form-group-stacked">
+                        <label for="resDesc">Short Description *</label>
+                        <textarea id="resDesc" rows="3" placeholder="Briefly describe what this resource covers..."></textarea>
+                    </div>
+
+                    <div class="form-row-balanced">
+                        <div class="form-group-stacked">
+                            <label for="resCategory">Category *</label>
+                            <select id="resCategory">
+                                <option value="Medical">🏥 Medical</option>
+                                <option value="Electrical">⚡ Electrical</option>
+                                <option value="Water">💧 Water / Sanitation</option>
+                                <option value="Logistics">📦 Logistics</option>
+                                <option value="Mental Health">🧠 Mental Health</option>
+                            </select>
+                        </div>
+                        <div class="form-group-stacked">
+                            <label for="resSkills">Skill Tags</label>
+                            <input type="text" id="resSkills" placeholder="e.g. Doctor, First Aid">
+                        </div>
+                    </div>
+
+                    <!-- Resource Type Pills -->
+                    <div class="form-group-stacked">
+                        <label>Resource Type *</label>
+                        <div class="pill-selector-group">
+                            <label class="pill-selector">
+                                <input type="radio" name="resType" value="pdf" checked>
+                                <span>📄 PDF</span>
+                            </label>
+                            <label class="pill-selector">
+                                <input type="radio" name="resType" value="video">
+                                <span>📽️ Video</span>
+                            </label>
+                            <label class="pill-selector">
+                                <input type="radio" name="resType" value="guide">
+                                <span>📖 Guide</span>
+                            </label>
+                            <label class="pill-selector">
+                                <input type="radio" name="resType" value="article">
+                                <span>📰 Article</span>
+                            </label>
+                            <label class="pill-selector">
+                                <input type="radio" name="resType" value="checklist">
+                                <span>✅ Checklist</span>
+                            </label>
+                            <label class="pill-selector">
+                                <input type="radio" name="resType" value="template">
+                                <span>📝 Template</span>
+                            </label>
+                            <label class="pill-selector">
+                                <input type="radio" name="resType" value="quiz">
+                                <span>❓ Quiz</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Difficulty Levels -->
+                    <div class="form-group-stacked">
+                        <label>Difficulty Level</label>
+                        <div class="pill-selector-group">
+                            <label class="pill-selector">
+                                <input type="radio" name="resDifficulty" value="Beginner" checked>
+                                <span>Beginner</span>
+                            </label>
+                            <label class="pill-selector">
+                                <input type="radio" name="resDifficulty" value="Intermediate">
+                                <span>Intermediate</span>
+                            </label>
+                            <label class="pill-selector">
+                                <input type="radio" name="resDifficulty" value="Advanced">
+                                <span>Advanced</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Input Area -->
+                    <div id="dynamicInputArea" class="dynamic-area">
+                        <!-- Content injected via JS based on type -->
+                        <div class="file-dropzone" onclick="document.getElementById('resFile').click()">
+                            <span class="icon">📎</span>
+                            <p><strong>Click to upload PDF</strong> or drag and drop</p>
+                            <span class="subtext">Maximum file size: 10MB</span>
+                            <input type="file" id="resFile" accept=".pdf" style="display:none">
+                        </div>
+                    </div>
+
+                    <!-- Feature Checkbox -->
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="resFeatured"> Feature this resource on the main dashboard</label>
+                    </div>
+                </form>
+            </div>
+
+            <footer class="modal-footer action-footer">
+                <div class="footer-left">
+                    <span class="security-note">🔒 Secure upload to resource library</span>
+                </div>
+                <div class="modal-btns">
+                    <button class="btn-cancel" onclick="closeDashboardModal('uploadResourceModal')">Cancel</button>
+                    <button class="btn-primary blue-fill" id="submitResBtn" onclick="submitResource()">Upload Resource</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="../js/pages/ngo-dashboard.js"></script>
+</body>
+</html>

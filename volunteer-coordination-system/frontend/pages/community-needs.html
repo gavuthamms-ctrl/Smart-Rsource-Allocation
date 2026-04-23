@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Needs | Smart Resource Allocation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pages/community-dashboard.css">
+    <link rel="stylesheet" href="../css/pages/community-needs.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <span style="font-size: 24px;">🤝</span>
+                    <span class="logo-text">SmartResource</span>
+                </div>
+                <div class="comm-badge">🌍 Community Member</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="community-dashboard.html" class="nav-link">
+                    <i>🏠</i> My Dashboard
+                </a>
+                <a href="community-needs.html" class="nav-link active">
+                    <i>🆘</i> My Needs
+                </a>
+                <a href="community-volunteers.html" class="nav-link">
+                    <i>🙋</i> Find Volunteers
+                </a>
+                <a href="chatbox.html" class="nav-link">
+                    <i>💬</i> Community Chatbox
+                </a>
+                <a href="community-profile.html" class="nav-link">
+                    <i>⚙️</i> My Profile
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">P</div>
+                    <div class="user-details">
+                        <span class="name user-name">Loading...</span>
+                        <span class="role">Community Member</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Navbar -->
+            <header class="navbar">
+                <div class="page-title">My Community Needs</div>
+                <div class="navbar-right" style="display: flex; align-items: center; gap: 20px;">
+                    <button class="report-btn-nav" style="border-radius: 8px;">🆘 Report Urgent</button>
+                    <div class="avatar" style="width: 32px; height: 32px; font-size: 14px;">P</div>
+                </div>
+            </header>
+
+            <div class="needs-container">
+                <div class="page-header">
+                    <div class="header-left">
+                        <h1>My Needs</h1>
+                        <p>Track and manage your reported community needs</p>
+                    </div>
+                    <div class="header-right">
+                        <button class="btn-primary" onclick="window.location.href='community-dashboard.html'">➕ Report New Need</button>
+                    </div>
+                </div>
+
+                <!-- Current Need Container -->
+                <div id="currentNeedContainer">
+                    <!-- Dynamic rendering in JS -->
+                </div>
+
+                <!-- History Section -->
+                <section class="history-section">
+                    <h2>Previous Needs</h2>
+                    <div id="historyGrid" class="history-grid">
+                        <!-- History items -->
+                    </div>
+                </section>
+
+                <!-- Nearby Solidarity -->
+                <section class="solidarity-card">
+                    <h3 style="color: var(--community-primary);">🌍 Other Needs in Your Area</h3>
+                    <p style="font-size: 14px; color: #666;">Support your community by monitoring other active needs in your city.</p>
+                    <div id="nearbyNeedsList">
+                        <!-- Nearby needs items -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/pages/community-needs.js"></script>
+</body>
+</html>

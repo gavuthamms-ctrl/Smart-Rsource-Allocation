@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Resources | Smart Resource Allocation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/pages/ngo-resources.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- NGO SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="logo">
+                    <span class="logo-icon">🤝</span>
+                    <span class="logo-text">SmartResource</span>
+                </div>
+                <div class="ngo-badge">
+                    <span class="ngo-icon">🏢</span>
+                    <span id="ngoNameText">Gavutham Foundation</span>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="ngo-dashboard.html" class="nav-link">🏠 Dashboard</a>
+                <a href="ngo-volunteers.html" class="nav-link">🙋 Volunteers</a>
+                <a href="ngo-tasks.html" class="nav-link">✅ Task Management</a>
+                <a href="ngo-community.html" class="nav-link">🌍 Community Needs</a>
+                <a href="ngo-reports.html" class="nav-link">📊 Reports & Analytics</a>
+                <a href="ngo-resources.html" class="nav-link active">📚 NGO Resources</a>
+                <a href="ngo-chatbox.html" class="nav-link">💬 Community Chatbox</a>
+                <a href="ngo-profile.html" class="nav-link">⚙️ NGO Settings</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile-row" onclick="location.href='ngo-profile.html'">
+                    <div class="sidebar-avatar" id="sidebarAvatar">G</div>
+                    <div class="sidebar-user-details">
+                        <span class="user-name" id="sidebarUserName">Gavutham</span>
+                        <span class="user-role">🏢 NGO Admin</span>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="handleLogout()">🚪 Logout</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <header class="top-navbar">
+                <div class="nav-left">
+                    <button class="hamburger-btn">☰</button>
+                    <h1 class="page-title">📚 NGO Resource Center</h1>
+                </div>
+                <div class="nav-right">
+                    <button class="btn-primary" onclick="openUploadModal()">🚀 Upload New Resource</button>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- NGO-SPECIFIC RESOURCE STATS -->
+                <section class="resource-meta-row">
+                    <div class="meta-card">
+                        <span class="m-val" id="totalLibrary">0</span>
+                        <span class="m-lbl">In Library</span>
+                    </div>
+                    <div class="meta-card">
+                        <span class="m-val" id="totalViews">0</span>
+                        <span class="m-lbl">Total Views</span>
+                    </div>
+                    <div class="meta-card">
+                        <span class="m-val" id="avgRating">0.0</span>
+                        <span class="m-lbl">Avg Rating</span>
+                    </div>
+                    <div class="meta-card">
+                        <span class="m-val" id="feedbackCount">0</span>
+                        <span class="m-lbl">Feedbacks</span>
+                    </div>
+                </section>
+
+                <div class="resources-layout-grid">
+                    <!-- FILTERS LEFT -->
+                    <aside class="resource-filters">
+                        <div class="filter-header">
+                            <h3>Filters</h3>
+                            <button class="btn-text" onclick="clearFilters()">Clear</button>
+                        </div>
+                        <div class="filter-group">
+                            <label>Search</label>
+                            <input type="text" id="resSearch" placeholder="Search resources..." oninput="fetchResources()">
+                        </div>
+                        <div class="filter-group">
+                            <label>Category</label>
+                            <select id="catFilter" onchange="fetchResources()">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Type</label>
+                            <select id="typeFilter" onchange="fetchResources()">
+                                <option value="">All Types</option>
+                                <option value="guide">Guide</option>
+                                <option value="video">Video</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Owner</label>
+                            <select id="ownerFilter" onchange="fetchResources()">
+                                <option value="me">My Uploads</option>
+                                <option value="all" selected>All NGO Uploads</option>
+                            </select>
+                        </div>
+                    </aside>
+
+                    <!-- CONTENT RIGHT -->
+                    <div class="resource-main">
+                        <div class="res-grid" id="resGrid">
+                            <!-- Resource Cards -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- UPLOAD MODAL (Reused from resources.html but simplified) -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content large">
+            <span class="close" onclick="closeModal('uploadModal')">&times;</span>
+            <h2>🚀 Upload New Resource</h2>
+            <form id="uploadForm" class="grid-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="category_id" id="uploadCatSelect" required></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Difficulty</label>
+                        <select name="difficulty" required>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select name="resource_type" required>
+                            <option value="guide">Guide (Markdown)</option>
+                            <option value="video">Video URL</option>
+                            <option value="pdf">PDF Link</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Content / URL</label>
+                    <textarea name="content" rows="6" required placeholder="Markdown content or External URL..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-outline" onclick="closeModal('uploadModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Publish Resource</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/pages/ngo-resources.js"></script>
+</body>
+</html>

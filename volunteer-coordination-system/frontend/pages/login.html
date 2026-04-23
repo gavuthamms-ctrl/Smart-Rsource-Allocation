@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Smart Resource Allocation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/pages/login.css">
+</head>
+<body>
+    <div class="login-container">
+        
+        <!-- LEFT PANEL (Branding) -->
+        <div class="branding-panel">
+            <div class="floating-circles">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="branding-content">
+                <!-- SVG Logo: Hands and Heart -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#ff6f00"/>
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="white" stroke-width="2"/>
+                    <path d="M7 10h10M12 5v10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                
+                <h1>Smart Resource Allocation</h1>
+                <p class="tagline">Data-Driven Volunteer Coordination for Social Impact</p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span>📊</span>
+                        <p>Centralize community needs data</p>
+                    </div>
+                    <div class="feature-item">
+                        <span>🤝</span>
+                        <p>Smart volunteer matching</p>
+                    </div>
+                    <div class="feature-item">
+                        <span>📈</span>
+                        <p>Track real-time social impact</p>
+                    </div>
+                </div>
+                
+                <p class="bottom-tagline">Empowering NGOs to do more with less</p>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL (Form) -->
+        <div class="form-panel">
+            <div class="form-wrapper">
+                <div class="form-header">
+                    <!-- Mobile Logo (shown only on small screens) -->
+                    <div class="mobile-logo">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#1a237e"/>
+                            </svg>
+                            <span style="font-weight: 700; color: #1a237e; font-size: 18px;">Smart Allocation</span>
+                        </div>
+                    </div>
+                    <h2>Welcome Back 👋</h2>
+                    <p>Login to your dashboard</p>
+                </div>
+
+                <label class="role-selector-label">Login as:</label>
+                <div class="role-selector" id="roleSelector">
+                    <div class="role-pill active" onclick="selectRole('volunteer', this)">
+                        <span>🙋</span> Volunteer
+                    </div>
+                    <div class="role-pill" onclick="selectRole('ngo_admin', this)">
+                        <span>🏢</span> NGO Admin
+                    </div>
+                    <div class="role-pill" onclick="selectRole('community', this)">
+                        <span>👥</span> Community
+                    </div>
+                </div>
+
+                <form id="loginForm">
+                    <!-- Email Field -->
+                    <div class="input-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-container">
+                            <span class="input-icon">📧</span>
+                            <input type="email" id="email" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-container">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                            <span class="password-toggle" onclick="togglePassword()">👁️</span>
+                        </div>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe"> Remember Me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <div class="spinner" id="btnSpinner"></div>
+                        <span id="btnText">Login</span>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <p class="register-text" id="registerContainer">
+                    Don't have an account? <a href="register.html">Register here</a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- JS -->
+    <script src="../js/pages/login.js"></script>
+</body>
+</html>
