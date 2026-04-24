@@ -12,7 +12,10 @@ class Config:
         'pool_pre_ping'  : True,
         'pool_recycle'   : 3600,
         'pool_size'      : 5,
-        'max_overflow'   : 10
+        'max_overflow'   : 10,
+        'connect_args'   : {
+            'ssl_disabled': True
+        }
     }
     UPLOAD_FOLDER        = os.getenv('UPLOAD_FOLDER', 'uploads/')
     MAX_CONTENT_LENGTH   = int(os.getenv('MAX_CONTENT_LENGTH', 16777216))
