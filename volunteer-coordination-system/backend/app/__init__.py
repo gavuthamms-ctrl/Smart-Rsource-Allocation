@@ -17,6 +17,17 @@ def create_app():
                 template_folder='templates')
     app.config.from_object('app.config.Config')
 
+    # Override engine options to fix Aiven SSL issue
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_pre_ping'  : True,
+        'pool_recycle'   : 3600,
+        'pool_size'      : 5,
+        'max_overflow'   : 10,
+        'connect_args'   : {
+            'ssl_disabled': True
+        }
+    }
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
@@ -51,12 +62,13 @@ def create_app():
     app.register_blueprint(ngo_bp,        url_prefix='/api/ngo')
     app.register_blueprint(community_bp,  url_prefix='/api/community')
 
-    # Import models for SQLAlchemy auto-creation (if needed)
-
     # Auto-create tables on startup
     with app.app_context():
-        db.create_all()
-        print("Database connected. Tables verified.")
+        try:
+            db.create_all()
+            print("Database connected. Tables verified.")
+        except Exception as e:
+            print(f"Database connection error: {e}")
 
     # Frontend routes
     @app.route('/')
