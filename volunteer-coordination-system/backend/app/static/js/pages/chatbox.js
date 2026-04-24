@@ -170,10 +170,7 @@ function buildSidebar() {
                 icon: '💬', text: 'Community Chatbox',
                 href: 'chatbox.html', active: true
             },
-            {
-                icon: '📚', text: 'Skill Resources',
-                href: 'resources.html'
-            },
+            
             {
                 icon: '⚙️', text: 'My Profile',
                 href: 'profile.html'
@@ -201,10 +198,7 @@ function buildSidebar() {
                 icon: '📊', text: 'Reports & Analytics',
                 href: 'ngo-reports.html'
             },
-            {
-                icon: '📚', text: 'NGO Resources',
-                href: 'ngo-resources.html'
-            },
+            
             {
                 icon: '💬', text: 'Community Chatbox',
                 href: 'ngo-chatbox.html', active: true

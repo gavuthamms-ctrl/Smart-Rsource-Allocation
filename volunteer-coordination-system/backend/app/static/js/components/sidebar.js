@@ -23,7 +23,6 @@ function initSidebar() {
             { label: 'My Matched Tasks', icon: '🎯', href: 'matched-tasks.html' },
             { label: 'My Task History', icon: '📋', href: 'task-history.html' },
             { label: 'Community Chatbox', icon: '💬', href: 'chatbox.html' },
-            { label: 'Skill Resources', icon: '📚', href: 'resources.html' },
             { label: 'My Profile', icon: '⚙️', href: 'profile.html' }
         ],
         ngo: [

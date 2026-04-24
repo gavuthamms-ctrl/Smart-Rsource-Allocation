@@ -40,7 +40,6 @@ def create_app():
     from app.routes.auth_routes import auth_bp
     from app.routes.volunteer_routes import volunteer_bp
     from app.routes.chat_routes import chat_bp
-    from app.routes.resource_routes import resource_bp
     from app.routes.profile_routes import profile_bp
     from app.routes.ngo_routes import ngo_bp
     from app.routes.community_routes import community_bp
@@ -48,13 +47,11 @@ def create_app():
     app.register_blueprint(auth_bp,       url_prefix='/api/auth')
     app.register_blueprint(volunteer_bp,  url_prefix='/api/volunteers')
     app.register_blueprint(chat_bp,       url_prefix='/api/chat')
-    app.register_blueprint(resource_bp,   url_prefix='/api/resources')
     app.register_blueprint(profile_bp,    url_prefix='/api/profile')
     app.register_blueprint(ngo_bp,        url_prefix='/api/ngo')
     app.register_blueprint(community_bp,  url_prefix='/api/community')
 
     # Import models for SQLAlchemy auto-creation (if needed)
-    from app.models.resource import SkillResource, ResourceCategory
 
     # Auto-create tables on startup
     with app.app_context():
