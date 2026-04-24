@@ -80,6 +80,22 @@ def create_app():
     def serve_pages(path):
         return render_template(f'pages/{path}')
 
+    # DB test route
+    @app.route('/test-db')
+    def test_db():
+        try:
+            db.session.execute(db.text('SELECT 1'))
+            return jsonify({
+                'status': 'success',
+                'db_uri': app.config.get('SQLALCHEMY_DATABASE_URI', 'NOT SET')[:60]
+            })
+        except Exception as e:
+            return jsonify({
+                'status': 'error',
+                'error': str(e),
+                'db_uri': app.config.get('SQLALCHEMY_DATABASE_URI', 'NOT SET')[:60]
+            })
+
     # Global error handlers
     @app.errorhandler(404)
     def not_found(e):
